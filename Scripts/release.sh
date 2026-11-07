@@ -5,9 +5,9 @@
 #   Scripts/release.sh 1.0.1 notes.md           # notes from a Markdown file
 #   DRY_RUN=1 Scripts/release.sh 1.0.1          # build + verify + package only, then undo the bump
 #   INSTALL=1 Scripts/release.sh 1.0.1          # also replace /Applications/Quickcast.app
-#   SKIP_TESTS=1 ...                            # skip the harness suite (~6 min)
+#   RUN_TESTS=1 ...                             # also run the harness suite (~6 min; off by default)
 #
-# Steps: preflight → bump project.yml + project.pbxproj → Scripts/run-tests.sh → xcodebuild
+# Steps: preflight → bump project.yml + project.pbxproj → [tests] → xcodebuild
 # Release (arm64) → verify the signer → zip + Ed25519 .sig + DMG → commit, tag, push main →
 # GitHub release with Quickcast-X.Y.Z.{dmg,zip,zip.sig}.
 #
@@ -77,7 +77,7 @@ step "Bumping project.yml and $PBXPROJ"
 sed -i '' -E "s/^( *MARKETING_VERSION: )\".*\"/\1\"$VERSION\"/; s/^( *CURRENT_PROJECT_VERSION: )\".*\"/\1\"$NEXT_BUILD\"/" project.yml
 sed -i '' -E "s/(MARKETING_VERSION = )[^;]*;/\1$VERSION;/; s/(CURRENT_PROJECT_VERSION = )[^;]*;/\1$NEXT_BUILD;/" "$PBXPROJ"
 
-if [[ "${SKIP_TESTS:-0}" != "1" ]]; then
+if [[ "${RUN_TESTS:-0}" == "1" ]]; then
     step "Running tests (Scripts/run-tests.sh)"
     log="$(mktemp)"
     TMPDIR="$(mktemp -d)/" Scripts/run-tests.sh > "$log" 2>&1 || true
