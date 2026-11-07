@@ -13,9 +13,16 @@ enum BundleSignature {
     static func trustedHash(of bundleURL: URL, releaseSigned: Bool) -> Data? {
         var staticCode: SecStaticCode?
         guard SecStaticCodeCreateWithPath(bundleURL as CFURL, [], &staticCode) == errSecSuccess,
-            let staticCode,
-            let requirement = releaseSigned ? compiled(developerID) : runningRequirement,
-            SecStaticCodeCheckValidity(staticCode, flags, requirement) == errSecSuccess
+            let staticCode
+        else { return nil }
+        // Quickcast releases are self-signed, not Developer ID, so a release-signed zip still
+        // falls back to the running copy's own requirement: the key never weakens that path.
+        let candidates = (releaseSigned ? [compiled(developerID)] : []) + [runningRequirement]
+        guard
+            candidates.contains(where: { requirement in
+                guard let requirement else { return false }
+                return SecStaticCodeCheckValidity(staticCode, flags, requirement) == errSecSuccess
+            })
         else { return nil }
         return uniqueHash(of: staticCode)
     }
