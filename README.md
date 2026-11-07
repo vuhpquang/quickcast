@@ -1,12 +1,12 @@
-# Tinycast
+# Quickcast
 
 **A tiny, fully native macOS launcher. One hotkey, everything you reach for all day, under 100 MB of
 RAM.**
 
 <p align="center">
-  <a href="https://github.com/abue-ammar/tinycast/releases/latest">
+  <a href="https://github.com/vuhpquang/quickcast/releases/latest">
     <img alt="Latest release"
-         src="https://img.shields.io/github/v/release/abue-ammar/tinycast?sort=semver&style=flat&label=release&color=1F6FEB"></a>
+         src="https://img.shields.io/github/v/release/vuhpquang/quickcast?sort=semver&style=flat&label=release&color=1F6FEB"></a>
   <img alt="Swift 6.0"
        src="https://img.shields.io/badge/Swift-6.0-F05138?style=flat&logo=swift&logoColor=white">
   <img alt="macOS 26 or later"
@@ -14,18 +14,16 @@ RAM.**
   <a href="LICENSE">
     <img alt="License: AGPL-3.0"
          src="https://img.shields.io/badge/License-AGPL--3.0-3DA639?style=flat"></a>
-  <a href="https://discord.gg/v2Eeb4QQy3">
-    <img alt="Join the Tinycast Discord"
-         src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&logo=discord&logoColor=white"></a>
 </p>
 
 SwiftUI and AppKit, **zero third-party dependencies**, no Electron and no telemetry. It also **runs
 real Raycast extensions**, rendered as native SwiftUI. Free, open source, and staying that way.
 
-For anything private, email [iabueammar@gmail.com](mailto:iabueammar@gmail.com).
+> **Quickcast is a fork of [Tinycast](https://github.com/abue-ammar/tinycast) by Abue Ammar**, renamed and
+> maintained by [vuhpquang](https://github.com/vuhpquang). Licensed under AGPL-3.0, like the original.
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="Tinycast command palette" width="720">
+  <img src="docs/screenshot.png" alt="Quickcast command palette" width="720">
 </p>
 
 ## Features
@@ -35,7 +33,7 @@ For anything private, email [iabueammar@gmail.com](mailto:iabueammar@gmail.com).
 - **Global hotkey** — one shortcut summons the palette from anywhere.
 - **Per-app hotkeys** — bind a key to an app; press it to toggle (focus/hide).
 - **Deeplinks** — run any command, window action, quicklink, snippet, note or chat from a
-  `tinycast://` URL, for Karabiner-Elements, Shortcuts or scripts. A link can carry text and
+  `quickcast://` URL, for Karabiner-Elements, Shortcuts or scripts. A link can carry text and
   arguments, and a link from outside asks before it acts. Copy Deeplink (⇧⌘C) gives you the link.
 - **Search Files** — find files and folders instantly from a private index of the folders you choose,
   kept on your Mac. Needs Full Disk Access; off by default.
@@ -72,13 +70,8 @@ For anything private, email [iabueammar@gmail.com](mailto:iabueammar@gmail.com).
 
 On an Apple silicon Mac with macOS 26 or newer:
 
-```sh
-brew install --cask tinycast
-```
-
-- **Early builds:** `brew install --cask tinycast@beta` installs `Tinycast Beta.app` beside the stable app.
-- **DMG:** notarized, download from [Releases](https://github.com/abue-ammar/tinycast/releases). Drag `Tinycast.app` to `/Applications`.
-- **Intel Mac:** install from [our Homebrew tap](https://github.com/abue-ammar/homebrew-tinycast).
+Download `Quickcast.app` from [Releases](https://github.com/vuhpquang/quickcast/releases) and drag it to
+`/Applications`, or build it from source.
 
 ## Building from source
 
@@ -86,55 +79,10 @@ See **[docs/development.md](docs/development.md)** for the toolchain, build, pac
 website workflows. **[docs/](docs/README.md)** indexes everything else — architecture, engineering
 standards, the design system and one document per feature.
 
-## Support
+## Upstream
 
-Tinycast is **free, and it stays that way**. If it earns a place on your Mac, consider supporting its
-development. Thanks in advance.
-
-<p align="center">
-  <a href="https://tinycast.dev/support">
-    <img alt="Support Tinycast" width="188" height="44" src="docs/support-button.svg"></a><br>
-  <sub>Payments are handled securely by <a href="https://polar.sh">Polar.sh</a>.</sub>
-</p>
-
-You can also support Tinycast with crypto: scan a code with your wallet, or copy an address. Send
-only on the network named for that address. If yours isn't listed,
-[email me](mailto:iabueammar@gmail.com?subject=Supporting%20Tinycast).
-
-<table>
-  <tr>
-    <td align="center">
-      <img width="160" alt="Bitcoin address QR code" src="website/public/wallets/bitcoin-qr.svg"><br>
-      <b>Bitcoin</b>
-    </td>
-    <td align="center">
-      <img width="160" alt="Ethereum, Base and BNB Smart Chain address QR code" src="website/public/wallets/ethereum-qr.svg"><br>
-      <b>Ethereum, Base, BNB Smart Chain</b>
-    </td>
-    <td align="center">
-      <img width="160" alt="Solana address QR code" src="website/public/wallets/solana-qr.svg"><br>
-      <b>Solana</b>
-    </td>
-  </tr>
-</table>
-
-**Bitcoin**
-
-```text
-bc1qpfxtjpuhm2cm8kg4lqgu3ffjch7vcjf678arwn
-```
-
-**Ethereum, Base and BNB Smart Chain** (one address for all three)
-
-```text
-0x22A00612bc0bf1Dc73AAC75e8De1BA4e81fF0810
-```
-
-**Solana**
-
-```text
-4EH7JDXZxkJiahas1xgPyC1iBW9pfCVUXxVtpqvwAz6T
-```
+All credit for the original app goes to [Tinycast](https://github.com/abue-ammar/tinycast). To
+support its author, see the Tinycast repository.
 
 ## License
 

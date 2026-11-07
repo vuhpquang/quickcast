@@ -1,6 +1,6 @@
-# Tinycast website
+# Quickcast website
 
-The marketing page and documentation for Tinycast, at <https://tinycast.dev>.
+The marketing page and documentation for Quickcast, at <https://quickcast.dev>.
 
 Next.js (App Router) with a static export, Tailwind v4 for styling, and
 [Fumadocs](https://fumadocs.dev) for the documentation section. A small Worker in `worker/` serves
@@ -75,7 +75,7 @@ so changing an address means replacing its codes and scanning them before you co
 ## Media
 
 Videos and files over 25 MiB never enter git. Put them in `media/` (gitignored), run
-`npm run upload-media` to copy them to the R2 bucket behind `cdn.tinycast.dev`, and reference them
+`npm run upload-media` to copy them to the R2 bucket behind `cdn.quickcast.dev`, and reference them
 as `` `${site.cdn}/<name>` ``. The bucket is the only copy, and the upload needs Cloudflare
 credentials (`wrangler login`). A new file extension also needs its content type added to
 `Scripts/upload-website-media.sh`.

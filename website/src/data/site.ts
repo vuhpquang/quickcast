@@ -3,23 +3,23 @@
 
 // The page title and meta description, shared by the layout and /llms.txt. Google truncates a
 // description near 160 characters, so `summary` is written to land under it rather than be cut.
-export const pageTitle = "Tinycast: a free, native launcher for macOS";
+export const pageTitle = "Quickcast: a free, native launcher for macOS";
 export const summary =
   "A free, open source macOS launcher with app search, clipboard history, snippets, custom commands, window management, your own AI keys and Raycast extensions.";
 
 export const site = {
-  name: "Tinycast",
-  repo: "https://github.com/abue-ammar/tinycast",
-  intelTap: "https://github.com/abue-ammar/homebrew-tinycast",
-  url: "https://tinycast.dev",
-  // The R2 bucket behind cdn.tinycast.dev. Anything over Workers' 25 MiB
+  name: "Quickcast",
+  repo: "https://github.com/vuhpquang/quickcast",
+  intelTap: "https://github.com/vuhpquang/quickcast",
+  url: "https://quickcast.dev",
+  // The R2 bucket behind cdn.quickcast.dev. Anything over Workers' 25 MiB
   // per-asset cap lives here instead of `public/` — see website/README.md.
-  cdn: "https://cdn.tinycast.dev",
+  cdn: "https://cdn.quickcast.dev",
   // Shown only until the build-time release lookup resolves, and if it fails.
   fallbackVersion: "v0.9.7",
   platform: "macOS 26+",
   license: "AGPL-3.0",
-  licenseUrl: "https://github.com/abue-ammar/tinycast/blob/main/LICENSE",
+  licenseUrl: "https://github.com/vuhpquang/quickcast/blob/main/LICENSE",
   community: {
     discord: "https://discord.gg/v2Eeb4QQy3",
   },
@@ -51,7 +51,7 @@ export const nav = [
 
 // The hero's line. Every other channel lives in docs/install.md, which is
 // where both install CTAs point.
-export const brewInstallCommand = "brew install --cask tinycast";
+export const brewInstallCommand = "brew install --cask quickcast";
 
 // The logo wall under the hero, in render order. The track starts at the first
 // entry with the left edge under the mask, so the two least-known names lead
@@ -89,7 +89,7 @@ export type Badge = {
 // makes no request to a third party.
 export const badges: Badge[] = [
   {
-    href: "https://www.star-history.com/abue-ammar/tinycast",
+    href: "https://www.star-history.com/vuhpquang/quickcast",
     alt: "GitHub Trending Repository of the Day",
     src: "/badges/trending-light.svg",
     darkSrc: "/badges/trending-dark.svg",
@@ -97,7 +97,7 @@ export const badges: Badge[] = [
     height: 64,
   },
   {
-    href: "https://usefulshelf.co/apps/tinycast?utm_source=tinycast.dev&utm_medium=referral&utm_campaign=badge&utm_content=light",
+    href: "https://usefulshelf.co/apps/quickcast?utm_source=quickcast.dev&utm_medium=referral&utm_campaign=badge&utm_content=light",
     alt: "Featured on UsefulShelf",
     src: "/badges/usefulshelf.svg",
     darkSrc: "/badges/usefulshelf-lime.svg",
@@ -105,7 +105,7 @@ export const badges: Badge[] = [
     height: 66,
   },
   {
-    href: "https://www.trymacapps.com/app/tinycast",
+    href: "https://www.trymacapps.com/app/quickcast",
     alt: "Featured on TryMacApps",
     src: "/badges/trymacapps.png",
     width: 200,

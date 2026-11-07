@@ -7,8 +7,8 @@ struct UninstallTests {
     static var passes = 0
 
     static let home = "/Users/tester"
-    static let ownBundleID = "com.tinycast.app"
-    static let ownBundleURL = URL(fileURLWithPath: "/Applications/Tinycast.app")
+    static let ownBundleID = "com.vuhpquang.quickcast"
+    static let ownBundleURL = URL(fileURLWithPath: "/Applications/Quickcast.app")
     static let recentDocuments =
         "Application Support/com.apple.sharedfilelist/"
         + "com.apple.LSSharedFileList.ApplicationRecentDocuments"
@@ -305,20 +305,20 @@ struct UninstallTests {
     static func testIdentityRefusal() {
         let byID = UninstallTarget(
             bundleURL: URL(fileURLWithPath: "/Applications/Somewhere Else.app"),
-            bundleID: "com.tinycast.app", displayName: "Tinycast", bundleName: nil)
+            bundleID: "com.vuhpquang.quickcast", displayName: "Quickcast", bundleName: nil)
         expect(
             UninstallIdentity.make(
                 target: byID, otherAppNames: [], ownBundleID: ownBundleID,
                 ownBundleURL: ownBundleURL) == nil,
-            "Tinycast refuses to plan its own uninstall by bundle ID")
+            "Quickcast refuses to plan its own uninstall by bundle ID")
 
         let dev = UninstallTarget(
-            bundleURL: URL(fileURLWithPath: "/Applications/Tinycast Dev.app"),
-            bundleID: "com.tinycast.app.dev", displayName: "Tinycast Dev", bundleName: nil)
+            bundleURL: URL(fileURLWithPath: "/Applications/Quickcast Dev.app"),
+            bundleID: "com.vuhpquang.quickcast.dev", displayName: "Quickcast Dev", bundleName: nil)
         expect(
             UninstallIdentity.make(
-                target: dev, otherAppNames: [], ownBundleID: "com.tinycast.app.dev",
-                ownBundleURL: URL(fileURLWithPath: "/Applications/Tinycast Dev.app")) == nil,
+                target: dev, otherAppNames: [], ownBundleID: "com.vuhpquang.quickcast.dev",
+                ownBundleURL: URL(fileURLWithPath: "/Applications/Quickcast Dev.app")) == nil,
             "the Dev channel refuses itself too — the check is against the running identity")
         expect(
             UninstallIdentity.make(
