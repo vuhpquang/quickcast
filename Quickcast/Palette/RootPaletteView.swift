@@ -338,13 +338,14 @@ struct RootPaletteView: View {
                     WindowReader {
                         hostWindow = $0
                         installHeaderArrowHandler(in: $0)
+                        $0?.appearance = settings.paletteTheme.nsAppearance
                     }
                 )
                 // The window's frame is the size source, so the glass and clip stay matched.
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 // Identity rather than removed, so expanding never rebuilds the tree it sits on.
                 .glassEffect(
-                    isCollapsed ? .identity : .regular,
+                    isCollapsed ? .identity : .regular.tint(settings.paletteTheme.glassTint),
                     in: RoundedRectangle(cornerRadius: metrics.radius.panel, style: .continuous)
                 )
                 .overlay {
@@ -490,8 +491,17 @@ struct RootPaletteView: View {
                 // Next turn, past the refocus that selects all, so typing extends the answer.
                 Task { @MainActor in (hostWindow as? PalettePanel)?.moveFieldEditorCaretToEnd() }
             }
+            // Quickcast fork: a theme pins the panel light or dark and recolours its accent.
+            .onChange(of: settings.paletteTheme) { hostWindow?.appearance = settings.paletteTheme.nsAppearance }
+            .tint(settings.paletteTheme.accent)
             .onChange(of: vm.favoriteSlotToken) {
-                if let index = vm.favoriteSlotIndex { performShortcut(.favoriteSlot(index)) }
+                guard let index = vm.favoriteSlotIndex else { return }
+                // Quickcast fork: in Compact, ⌘1… open the visible buttons before any favorite.
+                if isCollapsed, vm.mode == .launcher, compactCommands.indices.contains(index) {
+                    runCompactCommand(compactCommands[index])
+                    return
+                }
+                performShortcut(.favoriteSlot(index))
             }
             // One optional makes "exactly one menu" structural; this only presents it.
             .onChange(of: openMenu) {

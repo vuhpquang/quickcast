@@ -12,6 +12,8 @@ final class SettingsNavigationState {
     }
 
     var tab: SettingsTab { history.current }
+    /// Quickcast fork: one installed extension's own page, shown over the Extensions tab.
+    private(set) var extensionName: String?
     var canGoBack: Bool { history.canGoBack }
     var canGoForward: Bool { history.canGoForward }
 
@@ -23,6 +25,7 @@ final class SettingsNavigationState {
     /// A search result navigates and asks the pane to reveal one section; a sidebar row just navigates.
     func select(_ tab: SettingsTab, revealing target: SettingsTarget? = nil) {
         history.select(tab)
+        extensionName = nil
         // Any navigation puts the previous pulse out, so a stale light can't outlive its pane.
         flashing = nil
         guard let target else { return }
@@ -47,6 +50,18 @@ final class SettingsNavigationState {
         scrollRequest = nil
     }
 
-    func goBack() { history.goBack() }
-    func goForward() { history.goForward() }
+    func selectExtension(_ name: String) {
+        select(.extensions)
+        extensionName = name
+    }
+
+    func goBack() {
+        extensionName = nil
+        history.goBack()
+    }
+
+    func goForward() {
+        extensionName = nil
+        history.goForward()
+    }
 }

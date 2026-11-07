@@ -220,6 +220,10 @@ final class AppSettings {
         didSet { defaults.set(appearance.rawValue, forKey: Key.appearance.rawValue) }
     }
 
+    var paletteTheme: PaletteTheme {
+        didSet { defaults.set(paletteTheme.rawValue, forKey: Key.paletteTheme.rawValue) }
+    }
+
     /// The per-app key System Settings writes too, so the two never disagree.
     var language: AppLanguage {
         didSet { defaults.set([language.rawValue], forKey: Key.language.rawValue) }
@@ -741,6 +745,8 @@ final class AppSettings {
             ?? .navigateBackOrClose
         appearance =
             defaults.string(forKey: Key.appearance.rawValue).flatMap(AppAppearance.init) ?? .system
+        paletteTheme =
+            defaults.string(forKey: Key.paletteTheme.rawValue).flatMap(PaletteTheme.init) ?? .standard
         language = Self.storedLanguage
         calcNumberStyle =
             defaults.string(forKey: Key.calcNumberStyle.rawValue).flatMap(CalcNumberStyle.init)

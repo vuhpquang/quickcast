@@ -39,6 +39,7 @@ enum SettingsFileSchema {
         case .supportReminders: return bind(settings, \.supportRemindersEnabled)
         case .language: return bind(settings, \.language)
         case .appearance: return bind(settings, \.appearance)
+        case .paletteTheme: return bind(settings, \.paletteTheme)
         case .animationsEnabled: return bind(settings, \.animationsEnabled)
         case .interfaceSize: return bind(settings, \.interfaceSize)
         case .compactMode: return bind(settings, \.compactMode)
@@ -177,6 +178,7 @@ extension PopToRootTimeout: SettingsFileRawValue {}
 extension EscapeKeyBehavior: SettingsFileRawValue {}
 extension CommandID: SettingsFileRawValue {}
 extension AppAppearance: SettingsFileRawValue {}
+extension PaletteTheme: SettingsFileRawValue {}
 extension AppLanguage: SettingsFileRawValue {}
 extension InterfaceSize: SettingsFileRawValue {}
 extension HyperKeyPhysicalKey: SettingsFileRawValue {}

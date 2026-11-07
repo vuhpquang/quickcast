@@ -6,6 +6,19 @@ struct SettingsDetailView: View {
     var body: some View {
         // Not a `TabView`: `NSTabView` re-hosts on selection and breaks the recorder.
         Group {
+            if let name = navigation.extensionName {
+                ExtensionPageView(name: name).id(name)
+            } else {
+                pane
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // One host for every pane, above their scroll views so a callout is never clipped.
+        .shortcutRecorderPopoverHost()
+    }
+
+    @ViewBuilder private var pane: some View {
+        Group {
             switch navigation.tab {
             case .general: GeneralSettingsView()
             case .applications: ApplicationsSettingsView()
@@ -33,8 +46,5 @@ struct SettingsDetailView: View {
             case .about: AboutView()
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        // One host for every pane, above their scroll views so a callout is never clipped.
-        .shortcutRecorderPopoverHost()
     }
 }

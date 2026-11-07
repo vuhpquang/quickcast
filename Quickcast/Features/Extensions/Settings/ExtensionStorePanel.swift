@@ -7,6 +7,7 @@ struct ExtensionStorePanel: View {
 
     @State private var query = ""
     @State private var results: [ExtensionListing] = []
+    @State private var popular: [ExtensionListing] = []
     @State private var searchFailure: String?
     @State private var searching = false
     @State private var searched = false
@@ -45,14 +46,18 @@ struct ExtensionStorePanel: View {
         .onChange(of: query) { _, value in scheduleSearch(value) }
         .onDisappear { searchTask?.cancel() }
         .task {
-            if let storeInstall { await loadListings(query: storeInstall.name) }
+            if let storeInstall {
+                await loadListings(query: storeInstall.name)
+            } else {
+                popular = (try? await ExtensionStoreClient().popular()) ?? []
+            }
         }
     }
 
     @ViewBuilder
     private var content: some View {
         if storeInstall == nil && query.trimmingCharacters(in: .whitespaces).isEmpty {
-            emptyState
+            if popular.isEmpty { emptyState } else { listings(popular, heading: "Popular") }
         } else if searching && results.isEmpty {
             VStack(spacing: Theme.Spacing.md) {
                 ProgressView()
@@ -68,21 +73,31 @@ struct ExtensionStorePanel: View {
                     String(localized: "“\($0.handle)/\($0.name)” is unavailable in the Raycast Store.")
                 } ?? String(localized: "Nothing matches “\(query)”."))
         } else {
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
-                    ForEach(results) { listing in
-                        StoreRow(
-                            listing: listing,
-                            state: state(for: listing),
-                            onInstall: { install(listing) })
-                    }
-                }
-                .hideNativeScrollers()
-            }
-            .overflowFade()
-            .thinScrollbar()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            listings(results, heading: nil)
         }
+    }
+
+    private func listings(_ listings: [ExtensionListing], heading: LocalizedStringKey?) -> some View {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
+                if let heading {
+                    Text(heading)
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.secondary)
+                        .padding(.bottom, Theme.Spacing.xs)
+                }
+                ForEach(listings) { listing in
+                    StoreRow(
+                        listing: listing,
+                        state: state(for: listing),
+                        onInstall: { install(listing) })
+                }
+            }
+            .hideNativeScrollers()
+        }
+        .overflowFade()
+        .thinScrollbar()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     /// Not a bare line of text in a tall empty panel: says what to do and what it will search.

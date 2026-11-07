@@ -478,6 +478,17 @@ like everything else, so a Debug build never shares installs with a release chan
 dependencies, a `node_modules/` of pre-built packages — byte-for-byte the layout Raycast's own
 build produces.
 
+**Each installed extension has its own sidebar row (Quickcast fork).** While Extensions is on, the
+Settings sidebar ends with an **Extensions** section, one `ExtensionSidebarLabel` per install.
+Selecting one sets `SettingsNavigationState.extensionName` over the Extensions tab, and
+`ExtensionPageView` shows its header (Update, Uninstall) and the same `ExtensionSettingsGrid` the
+library's disclosure expands to — launcher toggle, icon, preferences, then every command's alias,
+shortcut and checkbox.
+
+**Search Extensions opens on the store's most popular (Quickcast fork).** Before anything is typed the
+panel lists `ExtensionStoreClient.popular()` — `frontend_api/extensions?sort=popular&platform=macOS`,
+the same unofficial API as search — under "Popular", falling back to the prompt when it fails.
+
 Settings → Extensions offers four routes, under **Install New**:
 
 1. **Search extensions** — searches the Raycast Store and installs the bundle it already built. Nothing

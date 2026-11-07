@@ -14,6 +14,16 @@ enum ExtensionStoreResponse {
         return components?.url
     }
 
+    /// Quickcast fork: the store's own most-downloaded list, shown before anything is typed.
+    static func popularURL() -> URL? {
+        var components = URLComponents(string: "https://www.raycast.com/frontend_api/extensions")
+        components?.queryItems = [
+            URLQueryItem(name: "sort", value: "popular"),
+            URLQueryItem(name: "platform", value: "macOS")
+        ]
+        return components?.url
+    }
+
     static func lookupURL(handle: String, name: String) -> URL? {
         guard !handle.isEmpty, !name.isEmpty else { return nil }
         return URL(string: "https://www.raycast.com/api/v1/extensions")?

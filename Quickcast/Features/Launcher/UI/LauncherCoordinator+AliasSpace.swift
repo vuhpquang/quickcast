@@ -8,6 +8,8 @@ extension LauncherCoordinator {
         let typedAlias = String(query[..<space])
         let rest = String(query[query.index(after: space)...])
         guard let entry = entry(forExactAlias: typedAlias) else { return false }
+        // The back step restores this query; with its space it would re-open the entry forever.
+        core.palette.query = typedAlias
 
         if entry.kind == .command, let id = CommandCatalog.command(for: entry),
             !rest.trimmingCharacters(in: .whitespaces).isEmpty, open(id, seeding: rest)

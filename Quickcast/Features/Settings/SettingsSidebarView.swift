@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsSidebarView: View {
     @Environment(SettingsNavigationState.self) private var navigation
+    @Environment(AppCore.self) private var core
     @Environment(\.appearsActive) private var appearsActive
     @State private var query = ""
     @State private var highlighted: SettingsSearchEntry.ID?
@@ -33,10 +34,19 @@ struct SettingsSidebarView: View {
                             SettingsTabIcon(
                                 systemImage: tab.systemImage,
                                 tint: appearsActive
-                                    ? (navigation.tab == tab ? Color.primary : Color.accentColor)
+                                    ? (isSelected(tab) ? Color.primary : Color.accentColor)
                                     : Color.secondary)
                         }
-                        .tag(tab)
+                        .tag(SettingsSidebarItem.tab(tab))
+                    }
+                }
+            }
+            // Quickcast fork: every installed extension gets its own page.
+            if core.settings.extensionsEnabled, !core.extensions.installed.isEmpty {
+                Section("Extensions") {
+                    ForEach(core.extensions.installed, id: \.manifest.name) { installed in
+                        ExtensionSidebarLabel(installed: installed)
+                            .tag(SettingsSidebarItem.installedExtension(installed.manifest.name))
                     }
                 }
             }
@@ -78,13 +88,28 @@ struct SettingsSidebarView: View {
             .accessibilityHidden(true)
     }
 
+    private func isSelected(_ tab: SettingsTab) -> Bool {
+        navigation.extensionName == nil && navigation.tab == tab
+    }
+
     /// `List` hands back an optional selection; routing it through `select` records history.
-    private var selection: Binding<SettingsTab?> {
+    private var selection: Binding<SettingsSidebarItem?> {
         Binding(
-            get: { navigation.tab },
-            set: { if let tab = $0 { navigation.select(tab) } }
+            get: { navigation.extensionName.map(SettingsSidebarItem.installedExtension) ?? .tab(navigation.tab) },
+            set: {
+                switch $0 {
+                case .tab(let tab): navigation.select(tab)
+                case .installedExtension(let name): navigation.selectExtension(name)
+                case nil: break
+                }
+            }
         )
     }
+}
+
+private enum SettingsSidebarItem: Hashable {
+    case tab(SettingsTab)
+    case installedExtension(String)
 }
 
 private struct SettingsSearchResultRow: View {

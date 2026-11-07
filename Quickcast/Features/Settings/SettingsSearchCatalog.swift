@@ -141,6 +141,9 @@ enum SettingsSearchCatalog {
             .generalAppearance, "Appearance",
             keywords: ["dark", "light", "mode", "theme"]),
         .init(
+            .generalAppearance, "Palette theme",
+            keywords: ["theme", "colour", "color", "dracula", "catppuccin", "nord", "tokyo night", "gruvbox"]),
+        .init(
             .generalAppearance, "Show animations",
             keywords: ["motion", "transitions", "reduce motion", "effects", "instant"]),
         .init(

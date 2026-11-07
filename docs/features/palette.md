@@ -276,6 +276,20 @@ its existing window. The summon reveal still animates independently.
 Both compact and expanded surfaces use native regular glass without a custom scrim.
 The compact capsule and buttons have no additional surface mask or painted fill.
 
+**⌘1…⌘4 open the compact buttons (Quickcast fork).** While compact at root search, the ⌘-digit slot
+`PaletteState.favoriteSlotIndex` reports goes to `runCompactCommand` when a button sits at that
+position; past the last button the slot falls through to its favorite as before, so ⌘5…⌘0 still
+launch favorites. Expanded, every slot is a favorite's.
+
+### Palette themes (Quickcast fork)
+
+`AppSettings.paletteTheme` (`PaletteTheme`, General → Appearance → Palette theme, settings.json
+`appearance.paletteTheme`) colours the palette only. A theme tints the expanded glass, the compact
+capsule and unselected buttons with its background at 82 % (`Glass.tint`), paints a selected compact
+button with its accent, sets `.tint` to its accent, and pins the panel's `NSAppearance` light or dark
+so the ink ramps keep their contrast. `.standard` sets none of these, leaving the panel on
+`AppAppearance` exactly as upstream. The Settings window is never themed.
+
 At expanded launcher root, Escape clears the query while setting `forceExpanded`, so clearing and
 collapsing remain separate presses. The next Escape clears that flag and collapses; another closes.
 Menus and argument fields still take precedence, and sub-screen navigation keeps its own behavior.

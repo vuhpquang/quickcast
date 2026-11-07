@@ -41,6 +41,7 @@ struct CompactBar: View {
     let selection: CommandID?
     let onRun: (CommandID) -> Void
     @Environment(PaletteState.self) private var palette
+    @Environment(AppSettings.self) private var settings
     @Environment(\.metrics) private var metrics
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var isRevealed = false
@@ -55,7 +56,7 @@ struct CompactBar: View {
                 capsule.fill(.clear)
                     .frame(width: geometry.capsuleWidth(revealed: revealed))
                     .frame(maxHeight: .infinity)
-                    .glassEffect(.regular, in: capsule)
+                    .glassEffect(.regular.tint(settings.paletteTheme.glassTint), in: capsule)
                     .animation(
                         reduceMotion ? nil : BarMotion.capsule.delay(BarMotion.revealDelay),
                         value: revealed)
@@ -91,7 +92,10 @@ struct CompactBar: View {
         .accessibilityAddTraits(selection == command ? [.isSelected] : [])
         .accessibilityHidden(!revealed)
         .glassEffect(
-            .regular.tint(selection == command ? Theme.Colors.compactShortcutSelectionTint : nil)
+            .regular.tint(
+                selection == command
+                    ? settings.paletteTheme.accent ?? Theme.Colors.compactShortcutSelectionTint
+                    : settings.paletteTheme.glassTint)
                 .interactive(), in: .circle
         )
         .scaleEffect(revealed ? 1 : BarMotion.parkedScale)

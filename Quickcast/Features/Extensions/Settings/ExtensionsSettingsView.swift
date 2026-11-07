@@ -393,6 +393,64 @@ private struct ExtensionSettingsIcon: View {
 }
 
 /// A summary row, and while open its settings on an inset card — separators and fill, never glass.
+/// One `Grid` for every run: separate grids size columns apart, stranding controls.
+struct ExtensionSettingsGrid: View {
+    let installed: InstalledExtension
+
+    var body: some View {
+        Grid(
+            alignment: .leading, horizontalSpacing: Theme.Spacing.lg,
+            verticalSpacing: Theme.Spacing.md
+        ) {
+            // No heading: these two are one idea, and first so 19 commands can't bury them.
+            ExtensionLauncherRow(installed: installed)
+            ExtensionIconRow(installed: installed)
+
+            if !installed.manifest.preferences.isEmpty {
+                rule
+                heading(String(localized: "Preferences"))
+                ForEach(
+                    Array(installed.manifest.preferences.enumerated()), id: \.element.name
+                ) { index, schema in
+                    if index > 0 { rule }
+                    ExtensionPreferenceRow(
+                        extensionName: installed.manifest.name, schema: schema)
+                }
+            }
+
+            rule
+            heading(
+                installed.manifest.commands.count == 1
+                    ? String(localized: "Command") : String(localized: "Commands"))
+            ForEach(Array(installed.manifest.commands.enumerated()), id: \.element.id) {
+                index, command in
+                if index > 0 { rule }
+                CommandRows(installed: installed, command: command)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func heading(_ title: String) -> some View {
+        GridRow {
+            Text(title)
+                .font(.caption.weight(.medium))
+                .foregroundStyle(.tertiary)
+                .gridCellColumns(2)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, Theme.Spacing.xs)
+        }
+    }
+
+    private var rule: some View {
+        GridRow {
+            Divider()
+                .gridCellColumns(2)
+        }
+    }
+
+}
+
 private struct ExtensionDisclosure: View {
     let installed: InstalledExtension
     let isExpanded: Bool
@@ -406,7 +464,9 @@ private struct ExtensionDisclosure: View {
         VStack(alignment: .leading, spacing: 0) {
             summary
             if isExpanded {
-                settings
+                ExtensionSettingsGrid(installed: installed)
+                    // Indented under the row's icon, so the settings read as belonging to the row.
+                    .padding(.leading, Theme.Size.rowIcon + Theme.Spacing.lg)
                     .padding(.top, Theme.Spacing.lg)
             }
         }
@@ -443,61 +503,6 @@ private struct ExtensionDisclosure: View {
             isExpanded ? "Hide \(installed.title) settings" : "Configure \(installed.title)"
         )
         .id(SettingsTarget.row(.extensionsInstalled, installed.manifest.name))
-    }
-
-    /// One `Grid` for every run: separate grids size columns apart, stranding controls.
-    private var settings: some View {
-        Grid(
-            alignment: .leading, horizontalSpacing: Theme.Spacing.lg,
-            verticalSpacing: Theme.Spacing.md
-        ) {
-            // No heading: these two are one idea, and first so 19 commands can't bury them.
-            ExtensionLauncherRow(installed: installed)
-            ExtensionIconRow(installed: installed)
-
-            if !installed.manifest.preferences.isEmpty {
-                rule
-                heading(String(localized: "Preferences"))
-                ForEach(
-                    Array(installed.manifest.preferences.enumerated()), id: \.element.name
-                ) { index, schema in
-                    if index > 0 { rule }
-                    ExtensionPreferenceRow(
-                        extensionName: installed.manifest.name, schema: schema)
-                }
-            }
-
-            rule
-            heading(
-                installed.manifest.commands.count == 1
-                    ? String(localized: "Command") : String(localized: "Commands"))
-            ForEach(Array(installed.manifest.commands.enumerated()), id: \.element.id) {
-                index, command in
-                if index > 0 { rule }
-                CommandRows(installed: installed, command: command)
-            }
-        }
-        // Indented under the row's icon, so the settings read as belonging to the row above them.
-        .padding(.leading, Theme.Size.rowIcon + Theme.Spacing.lg)
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private func heading(_ title: String) -> some View {
-        GridRow {
-            Text(title)
-                .font(.caption.weight(.medium))
-                .foregroundStyle(.tertiary)
-                .gridCellColumns(2)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, Theme.Spacing.xs)
-        }
-    }
-
-    private var rule: some View {
-        GridRow {
-            Divider()
-                .gridCellColumns(2)
-        }
     }
 
     private var subtitle: String {

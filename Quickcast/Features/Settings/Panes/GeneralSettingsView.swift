@@ -77,6 +77,14 @@ struct GeneralSettingsView: View {
                 } label: {
                     SettingsRowTitle(.generalAppearance, "Appearance")
                 }
+                Picker(selection: $settings.paletteTheme) {
+                    ForEach(PaletteTheme.allCases) { theme in
+                        Text(theme.title).tag(theme)
+                    }
+                } label: {
+                    SettingsRowTitle(.generalAppearance, "Palette theme")
+                    Text("Colours the search window. Default follows Appearance.")
+                }
                 Toggle(isOn: $settings.animationsEnabled) {
                     SettingsRowTitle(.generalAppearance, "Show animations")
                 }
