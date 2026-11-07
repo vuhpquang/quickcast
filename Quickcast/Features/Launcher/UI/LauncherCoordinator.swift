@@ -20,7 +20,7 @@ final class LauncherCoordinator {
     private let extensionCoordinator: ExtensionCoordinator
     private let calendarCoordinator: CalendarCoordinator
     /// The backup commands only, which need the live stores to gather from and apply to.
-    private unowned let core: AppCore
+    unowned let core: AppCore
 
     init(
         ranking: LauncherRankingStore,
@@ -186,6 +186,9 @@ final class LauncherCoordinator {
             core.clipboardCoordinator.pasteNextInSequence()
         case .searchEmoji:
             paletteCoordinator.togglePalette(mode: .emoji)
+        case .openLaunchApp:
+            dismissPalette()
+            if !LaunchAppBridge.open() { NSWorkspace.shared.open(LaunchAppBridge.releasesURL) }
         case .searchFiles:
             fileSearchCoordinator.show()
         case .searchMenuItems:

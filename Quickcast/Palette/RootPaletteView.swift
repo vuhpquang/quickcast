@@ -416,6 +416,12 @@ struct RootPaletteView: View {
             .onChange(of: vm.query) {
                 resetCompactSelection()
                 if vm.collapseQueryLineBreaks() { return }
+                // Quickcast fork: an exact alias followed by Space opens its entry.
+                if vm.mode == .launcher, !vm.isComposing,
+                    core.launcherCoordinator.openAliasBeforeSpace(in: vm.query)
+                {
+                    return
+                }
                 land(restoringSelection: true)
                 if vm.mode == .fileSearch { fileSearch.search(vm.query, filter: vm.fileSearchFilter) }
                 if vm.mode == .launcher { core.fileSearchCoordinator.searchFromLauncher(vm.query) }

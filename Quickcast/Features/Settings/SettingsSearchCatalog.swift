@@ -108,7 +108,7 @@ enum SettingsSearchCatalog {
     static let entries: [SettingsSearchEntry] =
         general + applications + systemSettings + systemActions + commands + quicklinks
         + appleShortcuts + fallbacks + clipboard + snippets + fileSearch + windowManagement
-        + navigation + notes + calendar + emoji + ai + quickActions + dictation + extensions + permissions
+        + navigation + notes + calendar + emoji + launchApp + ai + quickActions + dictation + extensions + permissions
         + backup + about
 
     private static let general: [SettingsSearchEntry] = [
@@ -151,7 +151,7 @@ enum SettingsSearchCatalog {
             keywords: ["compact", "expanded", "slim", "search bar", "small"]),
         .init(
             group: .generalCompactShortcuts, "Compact Shortcuts",
-            keywords: ["slots", "buttons", "reorder", "clipboard", "emoji", "notes", "schedule", "quick ai"]),
+            keywords: ["slots", "buttons", "reorder", "clipboard", "emoji", "notes", "schedule", "quick ai", "launchapp"]),
         .init(
             .generalAppearance, "Follow the cursor across displays",
             keywords: ["monitor", "screen", "pointer", "multi display"]),
@@ -550,6 +550,13 @@ enum SettingsSearchCatalog {
         .init(
             .emojiAppearance, "Column Count",
             keywords: ["columns", "density", "zoom", "six", "eight", "ten"])
+    ]
+
+    private static let launchApp: [SettingsSearchEntry] = [
+        .init(pane: .launchApp, keywords: ["launchpad", "launcher", "app grid", "apps"]),
+        .init(
+            group: .launchAppCommands, "LaunchApp commands",
+            keywords: ["shortcut", "hotkey", "alias", "launchpad"])
     ]
 
     private static let calendar: [SettingsSearchEntry] = [

@@ -12,6 +12,7 @@ enum CommandID: String, CaseIterable, Sendable {
     case clipboardHistory = "command:clipboard-history"
     case pasteSequentially = "command:paste-sequentially"
     case searchEmoji = "command:search-emoji"
+    case openLaunchApp = "command:open-launchapp"
     case searchFiles = "command:search-files"
     case searchMenuItems = "command:search-menu-items"
     case switchWindows = "command:switch-windows"
@@ -55,7 +56,7 @@ enum CommandID: String, CaseIterable, Sendable {
 
     static let compactBarOptions: [CommandID] =
         defaultCompactBarCommands + [
-            .searchSnippets, .showNotes, .mySchedule, .quickAI
+            .searchSnippets, .showNotes, .mySchedule, .quickAI, .openLaunchApp
         ]
 
     static let compactBarLimit = 4
@@ -87,6 +88,7 @@ enum CommandID: String, CaseIterable, Sendable {
         case .clipboardHistory: return "Clipboard History"
         case .pasteSequentially: return "Paste Sequentially"
         case .searchEmoji: return "Search Emoji & Symbols"
+        case .openLaunchApp: return "Open LaunchApp"
         case .searchFiles: return "Search Files"
         case .searchMenuItems: return "Search Menu Bar Items"
         case .switchWindows: return "Switch Windows"
@@ -138,6 +140,7 @@ enum CommandID: String, CaseIterable, Sendable {
         case .clipboardHistory: return "doc.on.clipboard"
         case .pasteSequentially: return "list.bullet.clipboard"
         case .searchEmoji: return "face.smiling"
+        case .openLaunchApp: return "square.grid.3x3"
         case .searchFiles: return "doc.text.magnifyingglass"
         case .searchMenuItems: return "menubar.rectangle"
         case .switchWindows, .switchWindowsBackwards: return "macwindow.on.rectangle"

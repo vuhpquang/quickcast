@@ -1,7 +1,7 @@
 enum SettingsTab: CaseIterable, Identifiable {
     case general, applications, systemSettings, systemActions, commands, quicklinks, appleShortcuts,
         fallbacks, clipboard, snippets, fileSearch, windowManagement, navigation, notes, calendar, emoji,
-        dictation, ai, quickActions, extensions, permissions, backup, about
+        launchApp, dictation, ai, quickActions, extensions, permissions, backup, about
     /// The case, never an index: a selectable `List` flattens section and row IDs together.
     var id: Self { self }
 
@@ -29,6 +29,7 @@ enum SettingsTab: CaseIterable, Identifiable {
         case .notes: "notes"
         case .calendar: "calendar"
         case .emoji: "emoji"
+        case .launchApp: "launchapp"
         case .dictation: "dictation"
         case .ai: "ai"
         case .quickActions: "quick-actions"
@@ -59,6 +60,7 @@ enum SettingsTab: CaseIterable, Identifiable {
         case .windowManagement: return String(localized: "Window Management")
         case .clipboard: return String(localized: "Clipboard")
         case .emoji: return String(localized: "Emoji & Symbols")
+        case .launchApp: return "LaunchApp"
         case .calendar: return String(localized: "Calendar")
         case .extensions: return String(localized: "Extensions")
         case .permissions: return String(localized: "Permissions")
@@ -87,6 +89,7 @@ enum SettingsTab: CaseIterable, Identifiable {
         case .windowManagement: return "macwindow"
         case .clipboard: return "doc.on.clipboard"
         case .emoji: return "face.smiling"
+        case .launchApp: return "square.grid.3x3"
         case .calendar: return "calendar"
         case .extensions: return "puzzlepiece.extension"
         case .permissions: return "lock.shield"
@@ -123,7 +126,7 @@ enum SettingsSection: CaseIterable, Identifiable {
             // Everyday tools first; AI and extensions are opt-in extras.
             return [
                 .clipboard, .snippets, .fileSearch, .windowManagement, .navigation, .notes,
-                .calendar, .emoji, .dictation, .ai, .quickActions, .extensions
+                .calendar, .emoji, .launchApp, .dictation, .ai, .quickActions, .extensions
             ]
         case .advanced: return [.backup, .about]
         }

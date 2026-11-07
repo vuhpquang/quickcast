@@ -393,6 +393,14 @@ memos on the store's revision.
 A launcher row shows its entry's alias as a small chip after the name, so what a badge-bearing
 result will answer to is visible without opening anything.
 
+**Alias + Space opens the entry (Quickcast fork).** In root search, a query of the form
+`<alias><space><rest>` whose alias is held, case-insensitively, by exactly one listed entry opens
+that entry at once (`LauncherCoordinator+AliasSpace.swift`, called from `RootPaletteView`'s query
+`onChange`, skipped while IME text is marked). A built-in command with a search screen of its own —
+Emoji, Clipboard, Files, Quicklinks, Snippets, Define, Quick AI and the rest of the deeplink
+`seeding` set — opens with `<rest>` already typed; anything else launches as ↵ would. A shared alias
+or one nobody holds stays ordinary search text.
+
 Editing lives in Settings only — an alias is one-time configuration like a shortcut, not a
 per-invocation action, so the ⌘K menu stays out of it. Visibility is the one exception, and only in
 one direction: an unwanted result is noticed while searching, so ⌘K can hide a row, but putting it
