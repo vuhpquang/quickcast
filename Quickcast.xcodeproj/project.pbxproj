@@ -341,6 +341,7 @@
 		5C79E6AB0CD859A81E529E8D /* ChatSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34B8FCE83C3F18E28E4179F /* ChatSession.swift */; };
 		5C9F91DA75A31CC5E18318F2 /* FilePreviewStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0649823847E21353104DE429 /* FilePreviewStage.swift */; };
 		5CA4CFA7C1C3E1D5D3BFC9A7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A75BBDE87833A65C31C2FC9E /* AppDelegate.swift */; };
+		5D8C2621A538D54813816070 /* DictionaryScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9C7D2F9DAA9F14090E8C9C /* DictionaryScope.swift */; };
 		5EEC219D411FAA5915D7B0C9 /* PaletteState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E4C3BE9193F41519DCC1B4 /* PaletteState.swift */; };
 		5EF989AB53D24A88F9FCA56E /* WindowChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC806949C6BDC63AABDBE4D6 /* WindowChrome.swift */; };
 		5F68C10460250FD918389C00 /* DoubleTapDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB99134BF44F04954570158 /* DoubleTapDetector.swift */; };
@@ -986,6 +987,7 @@
 		0AFAE85B85BFF48EB570E74A /* AXWindowAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AXWindowAccess.swift; sourceTree = "<group>"; };
 		0AFDBA419D84FADCDAADD3F2 /* ChatTextHighlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTextHighlight.swift; sourceTree = "<group>"; };
 		0B98E24A7E77A8BEE1DDBA21 /* ColorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCard.swift; sourceTree = "<group>"; };
+		0B9C7D2F9DAA9F14090E8C9C /* DictionaryScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryScope.swift; sourceTree = "<group>"; };
 		0BB2EA3997D72516001EB99C /* HyperKeyConflictScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HyperKeyConflictScanner.swift; sourceTree = "<group>"; };
 		0C2E157709163E60C3830137 /* PaletteRowIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteRowIndex.swift; sourceTree = "<group>"; };
 		0C507A2265A262270DDE9F18 /* GlassEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassEffectView.swift; sourceTree = "<group>"; };
@@ -2966,6 +2968,7 @@
 			children = (
 				D5589991513EE3ECEB4AC78B /* DictionaryEntry.swift */,
 				5A0AA05204007008D4AD6492 /* DictionaryMarkup.swift */,
+				0B9C7D2F9DAA9F14090E8C9C /* DictionaryScope.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4448,6 +4451,7 @@
 				BEE52968E739696AC623CF6F /* DictionaryEntry.swift in Sources */,
 				FC7EA608E2DC76E50345A042 /* DictionaryEntryView.swift in Sources */,
 				24B09DDA5331BCC4E0D2BC2D /* DictionaryMarkup.swift in Sources */,
+				5D8C2621A538D54813816070 /* DictionaryScope.swift in Sources */,
 				5C73473BD3A23B02E5E570B8 /* DictionaryScreen.swift in Sources */,
 				2C5CD93C6FF3CE819D2B58E0 /* DictionaryService.swift in Sources */,
 				A6DFC30707484A85B6D4D641 /* DictionarySession.swift in Sources */,
