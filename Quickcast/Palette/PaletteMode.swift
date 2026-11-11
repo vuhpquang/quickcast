@@ -10,6 +10,7 @@ enum PaletteMode: String, CaseIterable, Identifiable {
     case inlineConfigure  // Quickcast fork: a launcher row's hotkey or alias
     case emoji
     case fileSearch
+    case screenshots  // Quickcast fork
     case menuSearch
     case switchWindows
     case rooms
@@ -47,6 +48,7 @@ enum PaletteMode: String, CaseIterable, Identifiable {
         case .inlineConfigure: return "character.cursor.ibeam"  // Quickcast fork
         case .emoji: return "face.smiling"
         case .fileSearch: return "doc.text.magnifyingglass"
+        case .screenshots: return "photo.on.rectangle.angled"  // Quickcast fork
         case .menuSearch: return "menubar.rectangle"
         case .switchWindows: return "macwindow.on.rectangle"
         case .rooms: return "door.left.hand.open"
@@ -74,6 +76,7 @@ enum PaletteMode: String, CaseIterable, Identifiable {
         case .inlineConfigure: return String(localized: "Type an alias…")  // Quickcast fork
         case .emoji: return String(localized: "Search emoji and symbols…")
         case .fileSearch: return String(localized: "Search files and folders…")
+        case .screenshots: return String(localized: "Search screenshots…")  // Quickcast fork
         case .menuSearch: return String(localized: "Search menu bar items…")
         case .switchWindows: return String(localized: "Search open windows…")
         case .rooms: return String(localized: "Search rooms, or name a new one…")

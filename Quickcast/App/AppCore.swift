@@ -118,6 +118,12 @@ final class AppCore {
             limit: settings.dictationHistoryLimit.rawValue),
         settings: settings, appIndex: appIndex, palette: palette, windowController: windowController,
         paletteCoordinator: paletteCoordinator, core: self)
+    // Quickcast fork: Search Screenshots.
+    @ObservationIgnored private(set) lazy var screenshotsCoordinator = ScreenshotsCoordinator(
+        textStore: ScreenshotTextStore(
+            fileURL: AppPaths.caches().appendingPathComponent("screenshot-text.json")),
+        settings: settings, windowController: windowController, paletteCoordinator: paletteCoordinator,
+        core: self)
     // Quickcast fork: hotkeys and aliases set from the launcher's ⌘K menu.
     @ObservationIgnored private(set) lazy var inlineConfigureCoordinator = InlineConfigureCoordinator(
         palette: palette, appIndex: appIndex, visibility: visibility, favorites: favorites,

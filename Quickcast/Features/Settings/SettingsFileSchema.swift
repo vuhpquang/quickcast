@@ -152,6 +152,7 @@ enum SettingsFileSchema {
         case .clipboardCommands: return launcher.commandsBinding(for: key, owner: .clipboard)
         case .emojiSkinTone: return bind(settings, \.emojiSkinTone)
         case .emojiGridColumns: return bind(settings, \.emojiGridColumns)
+        case .screenshotGridColumns: return bind(settings, \.screenshotGridColumns)  // Quickcast fork
         case .emojiCommands: return launcher.commandsBinding(for: key, owner: .emoji)
         case .calendarShowInLauncher: return bind(settings, \.calendarShowInLauncher)
         case .calendarLauncherLimit: return bind(settings, \.calendarLauncherLimit)
@@ -197,6 +198,7 @@ extension DictationMode: SettingsFileRawValue {}
 extension DictationDestination: SettingsFileRawValue {}
 extension DictationIdleRelease: SettingsFileRawValue {}
 extension DictationHistoryLimit: SettingsFileRawValue {}  // Quickcast fork
+extension ScreenshotGridColumns: SettingsFileRawValue {}  // Quickcast fork
 extension JoinWindow: SettingsFileRawValue {}
 
 extension ClipboardRetention: SettingsFileToken {

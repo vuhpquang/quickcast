@@ -148,6 +148,7 @@ If a change touches anything in the right column, the harness on the left is man
 | `dictation-test` | `Dictation/Model/DictationModel.swift`, `DictationTextFormatter.swift` — model paths and text formatting |
 | `dictation-field-test` | Composer rebinding and teardown, field-scoped dictation cancellation, and queued insertion validity; synthetic capture and real AppKit editors |
 | `dictation-cue-test` | System dictation sound paths, stop-before-play ordering and missing resources, without playing audio |
+| `screenshots-test` | `Screenshots/Model/Screenshot.swift`, `ScreenshotGrid.swift`, `ScreenshotTextStore.swift` with `EmojiGridGeometry` — capture detection by flag, name and localized prefix, folder resolution, order and day grouping, date and text search, column zoom, grid moves across days, and the text cache's folding, invalidation, pruning and file round trip |
 | `dictation-history-test` | `Dictation/Model/DictationHistoryStore.swift`, `DictationHistoryEntry.swift`, `DictationHistoryLimit.swift` — append, cap, Off, clear, removal, search, word counts and the file round trip in a temporary folder |
 | `dictation-volume-test` | Volume recovery across fade steps, user changes, output switching, failed writes and cancellation; injected audio controls only |
 | `dictation-inference-test` | Dictation byte BPE, Fourier/mel features and non-overlapping audio chunks; no downloaded models |
@@ -667,6 +668,25 @@ caches, TCC grants and login item, so this cannot disturb an installed copy.
 - Choosing the Search Files fallback right after opens on the same results without a pause
 - With Pop to Root Search delayed, close and reopen before the timeout: the launcher keeps its query
   and file results. Let the timeout expire, or use Immediately: reopening starts with an empty query
+
+### Search Screenshots (Quickcast fork)
+
+- With File Search **off**, Search Screenshots is still listed, and its row in Settings › File Search ›
+  Screenshots stays enabled with alias, hotkey and launcher checkbox
+- The grid lists the captures in the Screenshot app's folder, newest first under day headers, and a
+  plain image or a renamed capture without the xattr stays out; a recording shows the video glyph
+- Taking a screenshot while the screen is open adds it at the top within a couple of seconds, and the
+  highlight stays on the capture it was on
+- Arrow keys move by cell and by visual row across day headers; holding ↓ scrolls smoothly through a
+  few hundred captures with tiles filling in, no stutter
+- ⌘+ / ⌘- / ⌘0 and the ⌘K zoom rows change columns (3–6) for the session; reopening uses the setting
+- ↵ pastes the image into TextEdit/Messages, ⇧⌘C copies it (and it appears in Clipboard History), ⌘↵
+  opens Preview, ⌘F reveals, ⌃⌘C copies the path, ⌃X asks before trashing and the tile disappears
+- With **Search text in screenshots** on, a word only visible inside a capture finds it after the
+  screen has been open a moment; turning it off stops matching it
+- Moving the folder in the Screenshot app's Options menu is picked up on the next open; a denied
+  Desktop shows "Can’t read Desktop" with where to allow it
+- Light and dark: tile backgrounds, selection ring and captions stay legible on a light wallpaper
 
 ### Notes
 

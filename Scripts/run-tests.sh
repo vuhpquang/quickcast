@@ -245,6 +245,11 @@ run index clipboard-thumbnail-performance \
 run emoji-test             Quickcast/Features/Emoji/Model/EmojiCatalog.swift \
                            Quickcast/Features/Emoji/Model/EmojiGridGeometry.swift \
                            Quickcast/Features/Emoji/Model/EmojiData.generated.swift
+run screenshots-test       Quickcast/Features/Screenshots/Model/Screenshot.swift \
+                           Quickcast/Features/Screenshots/Model/ScreenshotGrid.swift \
+                           Quickcast/Features/Screenshots/Model/ScreenshotTextStore.swift \
+                           Quickcast/Features/Emoji/Model/EmojiCatalog.swift \
+                           Quickcast/Features/Emoji/Model/EmojiGridGeometry.swift
 run emoji-search-test      Quickcast/Features/Emoji/Model/EmojiCatalog.swift \
                            Quickcast/Features/Emoji/Model/EmojiData.generated.swift \
                            Quickcast/Features/Emoji/Service/EmojiIndex.swift \

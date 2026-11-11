@@ -101,6 +101,10 @@ enum SettingsBackupCoverage {
             "Dictation memory use stays a device-local preference.",
         AppSettingsKey.dictationHistoryLimit.rawValue:  // Quickcast fork
             "Dictation history is kept on this Mac only; an import must not clear or extend it.",
+        AppSettingsKey.screenshotGridColumns.rawValue:  // Quickcast fork
+            "Screenshot grid density stays a device-local preference.",
+        AppSettingsKey.screenshotTextSearchEnabled.rawValue:  // Quickcast fork
+            "Screenshot OCR is an opt-in processing choice on this Mac; a backup must not enable it.",
         AppSettingsKey.clipboardTextSearchEnabled.rawValue:
             "Background OCR is an opt-in processing choice on this Mac; a backup must not enable it.",
         AppSettingsKey.snippetsEnabled.rawValue:

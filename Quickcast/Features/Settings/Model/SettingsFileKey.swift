@@ -74,6 +74,7 @@ enum SettingsFileKey: String, CaseIterable, Sendable {
     case fileSearchRemovedDefaultPatterns = "fileSearch.removedDefaultPatterns"
     case fileSearchShowInLauncher = "fileSearch.showInLauncher"
     case fileSearchCommands = "fileSearch.commands"
+    case screenshotGridColumns = "fileSearch.screenshotColumns"  // Quickcast fork
     case notesEnabled = "notes.enabled"
     case notesRendersMarkdown = "notes.rendersMarkdown"
     case notesShowsFormattingBar = "notes.showsFormattingBar"

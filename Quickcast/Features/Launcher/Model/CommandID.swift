@@ -15,6 +15,7 @@ enum CommandID: String, CaseIterable, Sendable {
     case openLaunchApp = "command:open-launchapp"
     case dictationHistory = "command:dictation-history"  // Quickcast fork
     case searchFiles = "command:search-files"
+    case searchScreenshots = "command:search-screenshots"  // Quickcast fork
     case searchMenuItems = "command:search-menu-items"
     case switchWindows = "command:switch-windows"
     case switchWindowsBackwards = "command:switch-windows-backwards"
@@ -57,7 +58,8 @@ enum CommandID: String, CaseIterable, Sendable {
 
     static let compactBarOptions: [CommandID] =
         defaultCompactBarCommands + [
-            .searchSnippets, .showNotes, .mySchedule, .quickAI, .openLaunchApp
+            .searchSnippets, .showNotes, .mySchedule, .quickAI, .openLaunchApp,
+            .searchScreenshots  // Quickcast fork
         ]
 
     static let compactBarLimit = 4
@@ -92,6 +94,7 @@ enum CommandID: String, CaseIterable, Sendable {
         case .openLaunchApp: return "Open LaunchApp"
         case .dictationHistory: return "Dictation History"  // Quickcast fork
         case .searchFiles: return "Search Files"
+        case .searchScreenshots: return "Search Screenshots"  // Quickcast fork
         case .searchMenuItems: return "Search Menu Bar Items"
         case .switchWindows: return "Switch Windows"
         case .switchWindowsBackwards: return "Switch Windows Backwards"
@@ -145,6 +148,7 @@ enum CommandID: String, CaseIterable, Sendable {
         case .openLaunchApp: return "square.grid.3x3"
         case .dictationHistory: return "waveform.badge.magnifyingglass"  // Quickcast fork
         case .searchFiles: return "doc.text.magnifyingglass"
+        case .searchScreenshots: return "photo.on.rectangle.angled"  // Quickcast fork
         case .searchMenuItems: return "menubar.rectangle"
         case .switchWindows, .switchWindowsBackwards: return "macwindow.on.rectangle"
         case .openCamera: return "camera"

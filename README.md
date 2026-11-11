@@ -37,6 +37,8 @@ real Raycast extensions**, rendered as native SwiftUI. Free, open source, and st
   arguments, and a link from outside asks before it acts. Copy Deeplink (⇧⌘C) gives you the link.
 - **Search Files** — find files and folders instantly from a private index of the folders you choose,
   kept on your Mac. Needs Full Disk Access; off by default.
+- **Search Screenshots** — browse the screenshots and screen recordings macOS saved as a grid grouped by
+  day, live as new ones land; paste, copy, open or trash one, and optionally search the text in them.
 - **Dictionary** — look a word up with the Define Word command, or define whatever you typed from the
   launcher's fallbacks, read from the Mac's own dictionaries.
 - **Clipboard history** — text and images, searchable, pasted back into the app you were using.

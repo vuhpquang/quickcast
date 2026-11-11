@@ -40,6 +40,7 @@ extension LauncherCoordinator {
         case .dictationHistory: core.dictationHistoryCoordinator.show(query: text)
         case .searchQuicklinks: palette.togglePalette(mode: .quicklinks, seeding: text)
         case .searchFiles: core.fileSearchCoordinator.show(query: text)
+        case .searchScreenshots: core.screenshotsCoordinator.show(query: text)
         case .define: core.dictionaryCoordinator.show(term: text)
         case .quickAI: core.quickAICoordinator.show(draft: text)
         case .searchSnippets: core.snippetCoordinator.showSnippets(query: text)

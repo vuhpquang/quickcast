@@ -254,7 +254,7 @@ button per configured `AppSettings.compactBarCommands` entry whose feature
 when Compact is selected: an ordered list of zero to four unique commands, with add, replace,
 remove and move controls. The default is Clipboard History and Emoji & Symbols, both on for a new
 install, then Search Files and Search Quicklinks; Search Snippets, Show Notes, My Schedule, Quick
-AI and Open LaunchApp are also available. Disabled features retain their configured positions but disappear from the
+AI, Open LaunchApp and Search Screenshots are also available. Disabled features retain their configured positions but disappear from the
 bar until re-enabled; Settings still offers them, under **Off** in both menus and marked Off in the
 list, so a slot can be ready before its feature is.
 The ordered command identifiers persist in preferences, backups and `appearance.compactBarCommands`

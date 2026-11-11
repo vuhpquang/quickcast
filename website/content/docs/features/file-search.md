@@ -164,3 +164,17 @@ results are shown.
 | Type to search files and folders | Nothing recent in your search scopes                             |
 | No files found                   | The search finished without a match                              |
 | No images found                  | The same, with the Images filter on                              |
+
+## Search Screenshots
+
+The **Search Screenshots** command shows the screenshots and screen recordings macOS saved as a grid,
+newest first and grouped by day. It reads the folder set in the Screenshot app's **Options** menu (the
+Desktop unless you changed it) and updates live when you take a new one. It works with File Search
+off.
+
+- **Return** pastes the screenshot into the app you were using; **⌘ Return** opens it.
+- **⌘ K** also offers Copy Image, Copy Path, Show in Finder and Move to Trash, which asks first.
+- **⌘ +** and **⌘ -** change the number of columns while the screen is open; set the default in
+  **Settings → File Search → Screenshots**.
+- Type to filter by name or date, like `march` or `2026-03-02`. Turn on **Search text in screenshots**
+  to also match the text inside them; it's read on your Mac only while the screen is open.

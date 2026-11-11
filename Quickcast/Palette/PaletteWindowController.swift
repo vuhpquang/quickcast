@@ -438,7 +438,9 @@ final class PaletteWindowController: NSObject, NSWindowDelegate {
                 }
                 return true
             }
-            if self.core.palette.mode == .emoji, let zoom = Self.emojiGridZoom(from: event) {
+            if self.core.palette.mode == .emoji || self.core.palette.mode == .screenshots,  // Quickcast fork
+                let zoom = Self.emojiGridZoom(from: event)
+            {
                 self.core.palette.noteEmojiGridZoom(zoom)
                 return true
             }

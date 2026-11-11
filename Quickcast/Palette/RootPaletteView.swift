@@ -133,6 +133,9 @@ struct RootPaletteView: View {
         case .dictationHistory:  // Quickcast fork
             return DictationHistoryScreen(
                 coordinator: core.dictationHistoryCoordinator, vm: vm, openActions: openActions)
+        case .screenshots:  // Quickcast fork
+            return ScreenshotsScreen(
+                coordinator: core.screenshotsCoordinator, vm: vm, openActions: openActions)
         case .inlineConfigure:  // Quickcast fork
             return InlineConfigureScreen(coordinator: core.inlineConfigureCoordinator, query: vm.query)
         case .extensionCommand:

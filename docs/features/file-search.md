@@ -6,6 +6,9 @@ involved. It is reached from the built-in Search Files launcher command, or its 
 feature is enabled in Settings; with **Show in launcher** on, root search lists the top hits too. The
 design follows [fsearch](https://github.com/noahdunnagan/fsearch).
 
+The pane also hosts the fork's Screenshots section, which works with File Search off; see
+[screenshots.md](screenshots.md).
+
 ## Invariants
 
 - **The crawl runs in `FileIndexHelper`, never in the app.** On macOS 27 malloc keeps freed small blocks

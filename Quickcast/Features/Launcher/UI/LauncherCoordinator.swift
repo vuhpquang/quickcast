@@ -193,6 +193,7 @@ final class LauncherCoordinator {
             if !LaunchAppBridge.open() { NSWorkspace.shared.open(LaunchAppBridge.releasesURL) }
         case .searchFiles:
             fileSearchCoordinator.show()
+        case .searchScreenshots: core.screenshotsCoordinator.show()  // Quickcast fork
         case .searchMenuItems:
             menuSearchCoordinator.show()
         case .switchWindows:

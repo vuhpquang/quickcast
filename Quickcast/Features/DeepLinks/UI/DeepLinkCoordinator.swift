@@ -321,6 +321,7 @@ final class DeepLinkCoordinator {
         case .searchQuicklinks: paletteCoordinator.togglePalette(mode: .quicklinks, seeding: text)
         case .dictationHistory: core.dictationHistoryCoordinator.show(query: text)  // Quickcast fork
         case .searchFiles: core.fileSearchCoordinator.show(query: text)
+        case .searchScreenshots: core.screenshotsCoordinator.show(query: text)  // Quickcast fork
         case .define: core.dictionaryCoordinator.show(term: text)
         case .quickAI: core.quickAICoordinator.show(draft: text)
         case .searchSnippets: core.snippetCoordinator.showSnippets(query: text)

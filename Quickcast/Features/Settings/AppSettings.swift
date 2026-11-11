@@ -206,6 +206,15 @@ final class AppSettings {
         didSet { defaults.set(emojiGridColumns.rawValue, forKey: Key.emojiGridColumns.rawValue) }
     }
 
+    // Quickcast fork: Search Screenshots' grid density and opt-in text recognition.
+    var screenshotGridColumns: ScreenshotGridColumns {
+        didSet { defaults.set(screenshotGridColumns.rawValue, forKey: Key.screenshotGridColumns.rawValue) }
+    }
+
+    var screenshotTextSearchEnabled: Bool {
+        didSet { defaults.set(screenshotTextSearchEnabled, forKey: Key.screenshotTextSearchEnabled.rawValue) }
+    }
+
     /// How long a closed palette keeps its state before popping back to the root launcher.
     var popToRootTimeout: PopToRootTimeout {
         didSet { defaults.set(popToRootTimeout.rawValue, forKey: Key.popToRootTimeout.rawValue) }
@@ -749,6 +758,10 @@ final class AppSettings {
         emojiGridColumns =
             EmojiGridColumns(rawValue: defaults.integer(forKey: Key.emojiGridColumns.rawValue))
             ?? .default
+        screenshotGridColumns =  // Quickcast fork
+            ScreenshotGridColumns(rawValue: defaults.integer(forKey: Key.screenshotGridColumns.rawValue))
+            ?? .default
+        screenshotTextSearchEnabled = defaults.bool(forKey: Key.screenshotTextSearchEnabled.rawValue)
         popToRootTimeout =
             PopToRootTimeout(rawValue: defaults.integer(forKey: Key.popToRootTimeout.rawValue))
             ?? .immediately

@@ -105,8 +105,6 @@ launchers. We accept that to keep the app simple.
 - **Merge duplicate entries.** ([#632](https://github.com/vuhpquang/quickcast/issues/632))
 - **Turn an entry into a snippet with ⌘S.** ([#1333](https://github.com/vuhpquang/quickcast/issues/1333))
 - **Block chosen extensions.** ([#1522](https://github.com/vuhpquang/quickcast/issues/1522))
-- **A separate screenshot browser.** **Instead:** filter history by images and search the text in
-  them. It may come later as a plugin. ([#1211](https://github.com/vuhpquang/quickcast/issues/1211), [#1619](https://github.com/vuhpquang/quickcast/issues/1619))
 
 ## Snippets
 

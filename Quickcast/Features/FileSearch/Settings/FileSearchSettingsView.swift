@@ -19,12 +19,15 @@ struct FileSearchSettingsView: View {
             FileSearchAccessSection()
             FileSearchIndexSection()
                 .settingsEnabled(settings.fileSearchEnabled)
-            FeatureCommandsSection(owner: .fileSearch, anchor: .fileSearchCommands)
-                .settingsEnabled(settings.fileSearchEnabled)
+            FeatureCommandsSection(
+                owner: .fileSearch, anchor: .fileSearchCommands, excluding: [.searchScreenshots]  // Quickcast fork
+            )
+            .settingsEnabled(settings.fileSearchEnabled)
             FileSearchScopesSection()
                 .settingsEnabled(settings.fileSearchEnabled)
             FileSearchIgnoreSection()
                 .settingsEnabled(settings.fileSearchEnabled)
+            ScreenshotsSettingsSection()  // Quickcast fork: works without File Search
         }
         .formStyle(.grouped)
         .settingsScrollTarget(.fileSearch)
