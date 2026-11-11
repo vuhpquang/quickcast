@@ -5,6 +5,7 @@ struct PaletteFrame: Equatable {
     let mode: PaletteMode
     let query: String
     let selection: Int
+    var snippetTagFilter: String?  // Quickcast fork: the selection indexes the filtered rows
 }
 
 @MainActor
@@ -22,6 +23,9 @@ final class PaletteState {
         didSet { if oldValue != clipboardFilter { restoredSelection = nil } }
     }
     var fileSearchFilter: FileSearchFilter = .all
+    var snippetTagFilter: String? {  // Quickcast fork: nil is All Tags
+        didSet { if oldValue != snippetTagFilter { restoredSelection = nil } }
+    }
     var emojiCategoryFilter: EmojiCategoryFilter = .all
     /// Nil means the configured default; zoom only overrides it for this picker session.
     var emojiGridColumnsOverride: EmojiGridColumns?
@@ -97,7 +101,10 @@ final class PaletteState {
 
     func push(mode: PaletteMode) {
         if !self.mode.isNativeEditor {
-            backStack.append(PaletteFrame(mode: self.mode, query: query, selection: selection))
+            backStack.append(
+                PaletteFrame(
+                    mode: self.mode, query: query, selection: selection,
+                    snippetTagFilter: snippetTagFilter))  // Quickcast fork
         }
         replace(mode: mode)
     }
@@ -106,6 +113,7 @@ final class PaletteState {
         guard let frame = backStack.popLast() else { return false }
         openScreen(frame.mode)
         query = frame.query
+        snippetTagFilter = frame.snippetTagFilter  // Quickcast fork
         selection = frame.selection
         restoredSelection = preservingSelection ? frame.selection : nil
         // Not `resetToken`: landing the list again would throw away the selection restored here.
@@ -143,6 +151,7 @@ final class PaletteState {
         argumentEntryID = nil
         clipboardFilter = .all
         fileSearchFilter = .all
+        snippetTagFilter = nil  // Quickcast fork
         emojiCategoryFilter = .all
         emojiGridColumnsOverride = nil
         forceExpanded = false

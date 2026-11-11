@@ -6,19 +6,22 @@ struct Snippet: Sendable, Hashable {
     var keyword: String?
     var isEnabled: Bool
     var showsConfirmation: Bool
+    var tags: [String]  // Quickcast fork: normalized by SnippetTags where it is read or typed
 
     init(
         name: String,
         text: String,
         keyword: String? = nil,
         isEnabled: Bool = true,
-        showsConfirmation: Bool = false
+        showsConfirmation: Bool = false,
+        tags: [String] = []
     ) {
         self.name = name
         self.text = text
         self.keyword = keyword
         self.isEnabled = isEnabled
         self.showsConfirmation = showsConfirmation
+        self.tags = tags
     }
 }
 

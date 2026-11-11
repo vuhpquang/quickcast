@@ -4,12 +4,13 @@ import SwiftUI
 @Observable
 final class SnippetEditorSession {
     enum Field: CaseIterable, Hashable {
-        case template, name, keyword, enabled, confirmation
+        case template, name, keyword, tags, enabled, confirmation
     }
 
     let record: StoredSnippet?
     var name: String
     var keyword: String
+    var tags: String  // Quickcast fork: comma-separated, see SnippetTags
     var text: String
     var isEnabled: Bool
     var showsConfirmation: Bool
@@ -23,6 +24,7 @@ final class SnippetEditorSession {
         let snippet = record?.snippet
         name = snippet?.name ?? ""
         keyword = snippet?.keyword ?? ""
+        tags = SnippetTags.field(for: snippet?.tags ?? [])
         text = snippet?.text ?? ""
         isEnabled = snippet?.isEnabled ?? true
         showsConfirmation = snippet?.showsConfirmation ?? false
@@ -37,7 +39,7 @@ final class SnippetEditorSession {
         return Snippet(
             name: name.trimmingCharacters(in: .whitespacesAndNewlines), text: text,
             keyword: keyword.isEmpty ? nil : keyword, isEnabled: isEnabled,
-            showsConfirmation: showsConfirmation)
+            showsConfirmation: showsConfirmation, tags: SnippetTags.parse(tags))
     }
 
     func advanceFocus(backwards: Bool) {

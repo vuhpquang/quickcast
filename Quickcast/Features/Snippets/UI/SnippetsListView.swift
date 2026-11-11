@@ -142,6 +142,12 @@ private struct SnippetInfoSection: View {
         if let keyword = record.snippet.keyword, !keyword.isEmpty {
             rows.append(InfoRow(label: String(localized: "Keyword"), value: keyword))
         }
+        if !record.snippet.tags.isEmpty {  // Quickcast fork
+            rows.append(
+                InfoRow(
+                    label: String(localized: "Tags"),
+                    value: ListFormatter.localizedString(byJoining: record.snippet.tags)))
+        }
         if let keycaps = hotKeys.binding(for: .snippet(id: record.id))?.keycaps {
             rows.append(InfoRow(label: String(localized: "Shortcut"), keycaps: keycaps))
         }

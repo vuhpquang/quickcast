@@ -271,6 +271,11 @@ struct RootPaletteView: View {
                 clipboardFilterContent, width: metrics.size.clipboardFilterMenuWidth)
         case .fileSearchFilter:
             return headerMenu(fileSearchFilterContent, width: metrics.size.fileSearchFilterMenuWidth)
+        case .snippetTag:  // Quickcast fork
+            return headerMenu(
+                SnippetTagFilterMenu.content(tags: SnippetTagFilterMenu.tags(in: core.snippetsStore)) {
+                    vm.snippetTagFilter = $0
+                }, width: metrics.size.clipboardFilterMenuWidth)
         case .emojiCategory:
             return headerMenu(emojiCategoryContent, width: metrics.size.emojiCategoryMenuWidth)
         case .dictionaryScope:
@@ -456,6 +461,7 @@ struct RootPaletteView: View {
             .modifier(ExtensionSelectionForwarder(screen: extensionScreen, selection: vm.selection))
             // A narrower list means the old index points at a different row, or at none.
             .onChange(of: vm.clipboardFilter) { land(restoringSelection: true) }
+            .onChange(of: vm.snippetTagFilter) { land(restoringSelection: true) }  // Quickcast fork
             // The filter is part of the query, so narrowing re-runs it rather than thinning rows.
             .onChange(of: vm.fileSearchFilter) {
                 land()
@@ -843,6 +849,9 @@ struct RootPaletteView: View {
                     help: String(localized: "Filter by type  ⌘P"),
                     action: toggleFileSearchFilter)
             }
+            if !isCollapsed, vm.mode == .snippets {  // Quickcast fork
+                snippetTagFilterButton
+            }
             if !isCollapsed, vm.mode == .emoji {
                 headerGutter(width: metrics.spacing.md)
                 HeaderMenuButton(
@@ -1128,6 +1137,31 @@ struct RootPaletteView: View {
         open(.fileSearchFilter, highlighting: active)
     }
 
+    /// Quickcast fork: hidden, and ⌘P a no-op, while no enabled snippet carries a tag.
+    @ViewBuilder private var snippetTagFilterButton: some View {
+        let tags = SnippetTagFilterMenu.tags(in: core.snippetsStore)
+        if !tags.isEmpty {
+            let active = SnippetTags.activeFilter(vm.snippetTagFilter, in: tags)
+            headerGutter(width: metrics.spacing.md)
+            HeaderMenuButton(
+                title: SnippetTagFilterMenu.title(for: active),
+                systemImage: SnippetTagFilterMenu.systemImage(for: active),
+                isOpen: openMenu == .snippetTag,
+                help: String(localized: "Filter by tag  ⌘P"),
+                action: toggleSnippetTagFilter)
+        }
+    }
+
+    private func toggleSnippetTagFilter() {
+        if openMenu == .snippetTag {
+            closeMenus()
+            return
+        }
+        let tags = SnippetTagFilterMenu.tags(in: core.snippetsStore)
+        guard !tags.isEmpty else { return }
+        open(.snippetTag, highlighting: SnippetTagFilterMenu.row(of: vm.snippetTagFilter, in: tags))
+    }
+
     private func performFilterAction() -> Bool {
         switch PaletteFilterAction.resolve(
             collapsed: isCollapsed, mode: vm.mode,
@@ -1136,6 +1170,7 @@ struct RootPaletteView: View {
         case .extensionAccessory: toggleExtensionSearchAccessory()
         case .clipboardFilter: toggleClipboardFilter()
         case .fileSearchFilter: toggleFileSearchFilter()
+        case .snippetTag: toggleSnippetTagFilter()  // Quickcast fork
         case .emojiCategory: toggleEmojiCategory()
         case .dictionaryScope: toggleDictionaryScope()
         case .aiModel: toggleAIModel()
@@ -1388,8 +1423,8 @@ struct RootPaletteView: View {
         case .actions: .bottomTrailing
         case .argumentOptions: .belowHeaderTrailing
         case .inputOptions(let corner): corner
-        case .clipboardFilter, .fileSearchFilter, .emojiCategory, .dictionaryScope, .aiModel,
-            .aiReasoning,
+        case .clipboardFilter, .fileSearchFilter, .snippetTag, .emojiCategory, .dictionaryScope,
+            .aiModel, .aiReasoning,
             .aiAttachments, .extensionAccessory:
             .belowHeaderTrailing
         case nil: nil
@@ -1621,6 +1656,7 @@ private enum OpenMenu: Equatable {
     case app
     case clipboardFilter
     case fileSearchFilter
+    case snippetTag  // Quickcast fork
     case emojiCategory
     case dictionaryScope
     case aiModel

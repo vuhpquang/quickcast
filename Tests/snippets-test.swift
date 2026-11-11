@@ -27,6 +27,7 @@ struct SnippetsTests {
         testKeywordLifecycle()
         await testKeywordListenerLifecycle()
         testOwnEditorInjection()
+        try testSnippetTags()  // Quickcast fork
 
         print(failures == 0 ? "\nALL PASSED" : "\n\(failures) FAILED")
         exit(failures == 0 ? 0 : 1)
@@ -1976,6 +1977,79 @@ struct SnippetsTests {
         check(
             "real listener rapid on and off leaves no tap",
             listener.status == .off && tap.state == .absent)
+    }
+
+    /// Quickcast fork: tags in the front matter, the editor field, and the browser's filter.
+    private static func testSnippetTags() throws {
+        let fileURL = URL(fileURLWithPath: "/tmp/tags.md")
+        let tagged = Snippet(name: "Reply", text: "Body", keyword: "!r", tags: ["work", "e\"mail"])
+        let serialized = SnippetMarkdownSerializer.serialize(tagged)
+        check(
+            "tags serialize after the keyword as a quoted flow list",
+            serialized.hasPrefix(
+                "---\nname: \"Reply\"\nkeyword: \"!r\"\ntags: [\"work\", \"e\\\"mail\"]\nenabled: true\n"))
+        let roundTripped = try SnippetMarkdownSerializer.parse(content: serialized, fileURL: fileURL)
+        check("tags round-trip through the Markdown codec", roundTripped == tagged)
+        check(
+            "an untagged snippet writes no tags key, so older files stay byte-identical",
+            !SnippetMarkdownSerializer.serialize(Snippet(name: "A", text: "B")).contains("tags:"))
+        func tags(_ content: String) throws -> [String] {
+            try SnippetMarkdownSerializer.parse(content: content, fileURL: fileURL).tags
+        }
+        let untagged = try tags("---\nname: \"A\"\nenabled: true\n---\nB")
+        check("a file without tags reads as untagged", untagged.isEmpty)
+        let empty = try tags("---\ntags: [ ]\n---\n")
+        let loose = try tags("---\nTAGS:[\"a\" ,\"b\"]  \n---\n")
+        check("an empty list and loose spacing both parse", empty.isEmpty && loose == ["a", "b"])
+        let messy = try tags("---\ntags: [\" Work \", \"\", \"work\", \"Email\"]\n---\n")
+        check(
+            "parsed tags are trimmed, blank-free and deduplicated case-insensitively",
+            messy == ["Work", "Email"])
+        expectParseError("a bare tags string is rejected", content: "---\ntags: \"a\"\n---\n", fileURL: fileURL)
+        expectParseError("unquoted tags are rejected", content: "---\ntags: [a, b]\n---\n", fileURL: fileURL)
+        expectParseError(
+            "an unterminated tags list is rejected", content: "---\ntags: [\"a\"\n---\n", fileURL: fileURL)
+        expectParseError(
+            "a trailing comma in tags is rejected", content: "---\ntags: [\"a\",]\n---\n", fileURL: fileURL)
+        expectParseError(
+            "text after the tags list is rejected", content: "---\ntags: [\"a\"] x\n---\n", fileURL: fileURL)
+
+        check(
+            "the editor field splits on commas and normalizes",
+            SnippetTags.parse(" work, ,Email ,WORK,") == ["work", "Email"])
+        let editor = SnippetEditorSession(record: record("/tmp/reply.md", tagged))
+        check("the editor shows tags comma-separated", editor.tags == "work, e\"mail")
+        editor.tags = "home,  urgent "
+        check("the editor saves the typed tags", editor.snippet.tags == ["home", "urgent"])
+
+        let notes = Snippet(name: "Notes", text: "x", keyword: "!n", tags: ["Personal"])
+        let plain = Snippet(name: "Plain", text: "y")
+        check(
+            "tags in use are sorted and spelled as the first snippet carrying them",
+            SnippetTags.inUse([tagged, notes, Snippet(name: "W", text: "", tags: ["WORK"])])
+                == ["e\"mail", "Personal", "work"])
+        check(
+            "a tag filter matches case-insensitively and nil matches everything",
+            SnippetTags.matches(notes, tag: "personal") && !SnippetTags.matches(plain, tag: "personal")
+                && SnippetTags.matches(plain, tag: nil))
+        check(
+            "a tag no longer in use resolves to no filter",
+            SnippetTags.activeFilter("gone", in: ["work"]) == nil
+                && SnippetTags.activeFilter("WORK", in: ["work"]) == "work")
+        check(
+            "typed search matches name, keyword or tag",
+            SnippetTags.matches(notes, query: "pers") && SnippetTags.matches(notes, query: "!n")
+                && SnippetTags.matches(notes, query: "not") && !SnippetTags.matches(plain, query: "pers"))
+
+        let fm = FileManager.default
+        let root = fm.temporaryDirectory.appendingPathComponent(
+            "quickcast-snippet-tags-\(UUID().uuidString)", isDirectory: true)
+        defer { try? fm.removeItem(at: root) }
+        let repository = SnippetRepository(
+            bundleIdentifier: "com.vuhpquang.quickcast.dev", applicationSupportRoot: root)
+        let created = try repository.create(tagged)
+        let reloaded = try repository.load().records.first { $0.id == created.id }
+        check("tags persist through the repository", reloaded?.snippet.tags == tagged.tags)
     }
 
     private static func record(_ path: String, _ snippet: Snippet) -> StoredSnippet {

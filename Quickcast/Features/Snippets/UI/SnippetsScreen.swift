@@ -11,12 +11,12 @@ struct SnippetsScreen: PaletteScreen {
     /// A disabled snippet is off everywhere, so the browser lists exactly what the launcher does.
     var rows: [StoredSnippet] {
         let enabled = store.snippets.filter { $0.snippet.isEnabled }
+        // Quickcast fork: the header's tag filter, then name, keyword or tag.
+        let tag = SnippetTags.activeFilter(vm.snippetTagFilter, in: SnippetTags.inUse(enabled.map(\.snippet)))
+        let tagged = enabled.filter { SnippetTags.matches($0.snippet, tag: tag) }
         let query = vm.query.trimmingCharacters(in: .whitespaces)
-        guard !query.isEmpty else { return enabled }
-        return enabled.filter { record in
-            record.snippet.name.localizedCaseInsensitiveContains(query)
-                || record.snippet.keyword?.localizedCaseInsensitiveContains(query) == true
-        }
+        guard !query.isEmpty else { return tagged }
+        return tagged.filter { SnippetTags.matches($0.snippet, query: query) }
     }
 
     let primaryActionTitle = String(localized: "Paste Snippet")

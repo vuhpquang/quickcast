@@ -130,6 +130,11 @@ struct SnippetEditorView: View {
                 label: String(localized: "Snippet keyword"), text: $editor.keyword,
                 focus: .keyword, hint: String(localized: "Optional. Type this to expand the snippet.")
             )
+            // Quickcast fork: tags
+            field(
+                String(localized: "Tags"), placeholder: String(localized: "Optional, for example work, email"),
+                label: String(localized: "Snippet tags"), text: $editor.tags,
+                focus: .tags, hint: String(localized: "Optional. Separate tags with commas."))
             option(
                 String(localized: "Enabled"),
                 detail: String(localized: "Disabled snippets cannot be expanded."),

@@ -26,6 +26,7 @@ struct SnippetMarkdownSerializer {
         var keyword: String?
         var isEnabled = true
         var showsConfirmation = false
+        var tags: [String] = []
         var seenKeys = Set<String>()
 
         for lineIndex in 1..<closingIndex {
@@ -60,6 +61,8 @@ struct SnippetMarkdownSerializer {
                 isEnabled = try decodeBoolean(rawValue, fileURL: fileURL, line: lineNumber)
             case "show_confirmation":
                 showsConfirmation = try decodeBoolean(rawValue, fileURL: fileURL, line: lineNumber)
+            case "tags":  // Quickcast fork
+                tags = SnippetTags.normalized(try decodeList(rawValue, fileURL: fileURL, line: lineNumber))
             default:
                 preconditionFailure("Canonical keys are exhaustively handled")
             }
@@ -71,7 +74,8 @@ struct SnippetMarkdownSerializer {
             text: String(content[bodyStart...]),
             keyword: keyword,
             isEnabled: isEnabled,
-            showsConfirmation: showsConfirmation
+            showsConfirmation: showsConfirmation,
+            tags: tags
         )
     }
 
@@ -82,6 +86,9 @@ struct SnippetMarkdownSerializer {
         ]
         if let keyword = snippet.keyword {
             lines.append("keyword: \(encodeScalar(keyword))")
+        }
+        if !snippet.tags.isEmpty {  // Quickcast fork
+            lines.append("tags: [\(snippet.tags.map(encodeScalar).joined(separator: ", "))]")
         }
         lines.append("enabled: \(snippet.isEnabled)")
         lines.append("show_confirmation: \(snippet.showsConfirmation)")
@@ -134,7 +141,7 @@ struct SnippetMarkdownSerializer {
     private static func canonicalKey(for rawKey: String) -> String? {
         let key = rawKey.lowercased()
         switch key {
-        case "name", "keyword", "enabled", "show_confirmation":
+        case "name", "keyword", "tags", "enabled", "show_confirmation":
             return key
         default:
             return nil
@@ -143,21 +150,64 @@ struct SnippetMarkdownSerializer {
 
     private static func decodeScalar(_ value: String, fileURL: URL, line: Int) throws -> String {
         let scalars = value.unicodeScalars
-        guard scalars.first == "\"" else {
+        let (decoded, end) = try scanQuoted(scalars, from: scalars.startIndex, fileURL: fileURL, line: line)
+        guard scalars[end...].allSatisfy({ $0 == " " || $0 == "\t" }) else {
+            throw parseError(fileURL, line: line, String(localized: "Unexpected text after quoted value"))
+        }
+        return decoded
+    }
+
+    /// Quickcast fork: a one-line flow sequence of quoted strings, `["a", "b"]`; `[]` is empty.
+    private static func decodeList(_ value: String, fileURL: URL, line: Int) throws -> [String] {
+        let scalars = value.unicodeScalars
+        let isBlank: (Unicode.Scalar) -> Bool = { $0 == " " || $0 == "\t" }
+        guard scalars.first == "[" else {
+            throw parseError(fileURL, line: line, String(localized: "List values must use square brackets"))
+        }
+        var items: [String] = []
+        var index = scalars.index(after: scalars.startIndex)
+        while index < scalars.endIndex, isBlank(scalars[index]) { index = scalars.index(after: index) }
+        if index < scalars.endIndex, scalars[index] == "]" {
+            index = scalars.index(after: index)
+        } else {
+            while true {
+                let (item, end) = try scanQuoted(scalars, from: index, fileURL: fileURL, line: line)
+                items.append(item)
+                index = end
+                while index < scalars.endIndex, isBlank(scalars[index]) { index = scalars.index(after: index) }
+                guard index < scalars.endIndex else {
+                    throw parseError(fileURL, line: line, String(localized: "Unterminated list value"))
+                }
+                let separator = scalars[index]
+                index = scalars.index(after: index)
+                if separator == "]" { break }
+                guard separator == "," else {
+                    throw parseError(fileURL, line: line, String(localized: "Expected ',' or ']' in list"))
+                }
+                while index < scalars.endIndex, isBlank(scalars[index]) { index = scalars.index(after: index) }
+            }
+        }
+        guard scalars[index...].allSatisfy(isBlank) else {
+            throw parseError(fileURL, line: line, String(localized: "Unexpected text after list value"))
+        }
+        return items
+    }
+
+    /// Decodes one double-quoted string starting at `start`, returning the index after its quote.
+    private static func scanQuoted(
+        _ scalars: String.UnicodeScalarView, from start: String.UnicodeScalarView.Index,
+        fileURL: URL, line: Int
+    ) throws -> (String, String.UnicodeScalarView.Index) {
+        guard start < scalars.endIndex, scalars[start] == "\"" else {
             throw parseError(fileURL, line: line, String(localized: "String values must use double quotes"))
         }
 
         var decoded = ""
-        var index = scalars.index(after: scalars.startIndex)
+        var index = scalars.index(after: start)
         while index < scalars.endIndex {
             let scalar = scalars[index]
             if scalar == "\"" {
-                let trailing = scalars[scalars.index(after: index)...]
-                guard trailing.allSatisfy({ $0 == " " || $0 == "\t" }) else {
-                    throw parseError(
-                        fileURL, line: line, String(localized: "Unexpected text after quoted value"))
-                }
-                return decoded
+                return (decoded, scalars.index(after: index))
             }
             if scalar == "\\" {
                 let escapeIndex = scalars.index(after: index)

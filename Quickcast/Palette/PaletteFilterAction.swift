@@ -6,6 +6,7 @@ enum PaletteFilterAction: Equatable {
     case extensionAccessory
     case clipboardFilter
     case fileSearchFilter
+    case snippetTag  // Quickcast fork
     case emojiCategory
     case dictionaryScope
     case aiModel
@@ -21,6 +22,7 @@ enum PaletteFilterAction: Equatable {
         case .extensionCommand: return commandHasAccessory ? .extensionAccessory : .ignored
         case .clipboard: return .clipboardFilter
         case .fileSearch: return .fileSearchFilter
+        case .snippets: return .snippetTag  // Quickcast fork
         case .emoji: return .emojiCategory
         case .dictionary: return .dictionaryScope
         case .ai: return .aiModel

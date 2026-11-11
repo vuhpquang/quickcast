@@ -71,7 +71,8 @@ sinks re-project on every change.
 
 The encrypted `.rayconfig` flow in **Settings → Backup** can import Raycast's built-in snippets as
 an independently selectable category. Quickcast reads `title`, `text` and the optional `keyword` from
-the export's `snippets.snippets` collection. Invalid entries are skipped; valid entries are added in
+the export's `snippets.snippets` collection — tags are not read, since no export has been seen to carry them.
+Invalid entries are skipped; valid entries are added in
 source order without overwriting the existing library. Duplicate names receive the same filename
 suffixes as snippets created in Quickcast, and duplicate keywords are preserved.
 
@@ -90,6 +91,7 @@ Canonical output uses this order:
 ---
 name: "Meeting Notes"
 keyword: "!notes"
+tags: ["work", "meetings"]
 enabled: true
 show_confirmation: false
 ---
@@ -99,6 +101,13 @@ Template body
 
 `name` is optional when reading and defaults from the filename, and `keyword` is optional. `enabled`
 defaults to `true`; `show_confirmation` defaults to `false`.
+
+`tags` (a Quickcast fork addition) is optional and written only when a snippet has any, so an untagged
+file is byte-identical to what upstream writes. It is a one-line flow list of double-quoted strings,
+`["a", "b"]`, with `[]` meaning none; a bare string, unquoted items or a trailing comma are rejected
+like any other malformed value. Reading trims each tag, drops blanks and keeps the first spelling of
+case-insensitive duplicates. A Tinycast build, or a Quickcast older than this, rejects a tagged file
+as an unknown key — untagging it there means deleting the line.
 
 String values must use double quotes. The codec escapes and decodes `\\`, `\"`, `\n`, `\r`, and
 `\t`; unsupported escapes, unquoted strings, duplicate or unknown keys, non-exact delimiters, and
@@ -225,13 +234,24 @@ cycle and exits with Escape or a bare backspace, and like the clipboard it split
 preview.
 
 The list is every **enabled** snippet — a disabled one is absent here exactly as it is absent from the
-launcher — filtered by name *or* keyword. Substring matching, not the launcher's fuzzy scorer: this is
-a library being browsed rather than a query racing apps and commands for a rank.
+launcher — filtered by name, keyword *or* tag. Substring matching, not the launcher's fuzzy scorer: this is
+a library being browsed rather than a query racing apps and commands for a rank. Launcher search does
+not match tags.
+
+### Tag filter
+
+⌘P, or the header button beside the search field, opens a tag filter through `PaletteFilterAction`
+and the same header `PopoverMenu` the clipboard and Search Files type filters use: **All Tags**, then
+every tag on an enabled snippet, sorted. The button is hidden and ⌘P does nothing while no enabled
+snippet carries a tag. The filter is palette state (`PaletteState.snippetTagFilter`) and resets to All
+Tags on every summon and screen change; it rides the back stack, so returning from **Edit Snippet**
+restores both the filter and the row. A selected tag that no longer exists — its last snippet was
+edited or disabled — reads as All Tags rather than an empty list. Tags are matched case-insensitively.
 
 The preview shows the **raw template**, never an expansion. Expanding per selection would capture the
 clipboard, read the target's selected text and burn a `{uuid}` on every arrow key, and a snippet
 carrying `{argument}` would raise its prompt just to draw a pane. Beside it sits the name, keyword,
-shortcut, file name and character count.
+shortcut, tags, file name and character count.
 
 ↵ and the ⌘K menu's **Paste Snippet** both go through `SnippetCoordinator.expandSnippetFromPalette`,
 which reads `previousApp` before hiding the panel and then calls the same `expandSnippet` funnel a
@@ -256,7 +276,8 @@ by sending ⌘C; the browser's ⌘N and Settings start empty. The fields stay in
 
 The template is on the left, with its own **Insert…** placeholder menu, separate from Actions.
 It uses the palette's searchable popup, keeping its existing placeholder groups.
-**Name**, **Keyword**, **Enabled** and **Show confirmation** are on the right. The draft keeps the
+**Name**, **Keyword**, **Tags**, **Enabled** and **Show confirmation** are on the right. Tags are
+typed comma-separated, so a tag cannot contain a comma. The draft keeps the
 loaded record and its source revision; no file is created or changed before **Save Snippet**.
 The template grows with its text; only the whole form scrolls, never an individual field or column.
 A blank name disables Save.
