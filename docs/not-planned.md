@@ -80,7 +80,6 @@ launchers. We accept that to keep the app simple.
 - **"!" to run shell commands.** **Instead:** make a custom command. ([#147](https://github.com/vuhpquang/quickcast/issues/147))
 - **Drop-down choices for custom command inputs.** ([#1512](https://github.com/vuhpquang/quickcast/issues/1512))
 - **Keep the palette open after a command shows a message.** ([#1478](https://github.com/vuhpquang/quickcast/issues/1478))
-- **Jump from the launcher to an app's shortcut setting.** Go through Settings. ([#981](https://github.com/vuhpquang/quickcast/issues/981))
 - **Act on selected text or files from anywhere (LaunchBar's Instant Send).** ([#1323](https://github.com/vuhpquang/quickcast/issues/1323))
 - **Apps inside Parallels Desktop.** ([#1603](https://github.com/vuhpquang/quickcast/issues/1603))
 - **Small palette quirks we keep:** dragging an app out makes a Desktop alias, a dragged palette can

@@ -37,6 +37,7 @@ enum AppActionsMenu {
                 PopoverMenuItem(
                     title: title, systemImage: "eye.slash", shortcut: "⇧⌘H", action: onHideFromSearch))
         }
+        items.append(contentsOf: core.inlineConfigureCoordinator.menuItems(for: app))  // Quickcast fork
         if running, app.kind == .application {
             items.append(
                 PopoverMenuItem(

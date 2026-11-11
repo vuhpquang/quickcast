@@ -398,6 +398,7 @@ final class PaletteWindowController: NSObject, NSWindowDelegate {
         installPasteMonitor()
         panel.onEscape = { [weak self] in
             guard let self else { return false }
+            if core.inlineConfigureCoordinator.handleEscape() { return true }  // Quickcast fork
             if core.palette.mode == .customCommandEditor, !core.palette.isComposing {
                 core.customCommandCoordinator.cancelCustomCommandEditing()
                 return true

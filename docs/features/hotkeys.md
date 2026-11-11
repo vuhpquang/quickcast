@@ -433,3 +433,14 @@ Setting `recordingAction` is what starts and stops the capture, so there is exac
 callout above the field render the live state from outside the row that opened it. The field itself
 only ever shows the binding; the prompt, the live preview and the conflict message all live in the
 callout. See [ui.md](../ui.md#the-shortcut-recorder-callout).
+
+**From the launcher (Quickcast fork).** ⌘K on a launcher row offers **Set Hotkey… / Change Hotkey…**
+and **Remove Hotkey** for any row whose entry has a `HotKeyAction` — `AppEntry.hotKeyAction`, or
+`.extensionCommand(entryID:)` for an extension command, which is also what now puts that row's keycap
+in the launcher. Set/Change opens `InlineConfigureScreen`, which mounts this same `ShortcutRecorder`
+under a `.shortcutRecorderPopoverHost()` and sets `recordingAction` once the ⌘K menu has handed key
+status back (the session ends a recording when any window resigns key). Nothing about capture,
+pausing or conflicts is forked: the session commits, refuses a conflict in the callout, ⌫ removes,
+Esc cancels, and the screen pops back to the launcher once `recordingAction` leaves its action.
+Remove Hotkey calls `setBinding(nil, for:)` like the field's clear button. See
+[launcher.md](launcher.md#user-aliases).

@@ -7,6 +7,7 @@ enum PaletteMode: String, CaseIterable, Identifiable {
     case aiHistory
     case calculatorHistory
     case dictationHistory  // Quickcast fork
+    case inlineConfigure  // Quickcast fork: a launcher row's hotkey or alias
     case emoji
     case fileSearch
     case menuSearch
@@ -43,6 +44,7 @@ enum PaletteMode: String, CaseIterable, Identifiable {
         case .aiHistory: return "clock.arrow.circlepath"
         case .calculatorHistory: return "plus.forwardslash.minus"
         case .dictationHistory: return "waveform.badge.magnifyingglass"  // Quickcast fork
+        case .inlineConfigure: return "character.cursor.ibeam"  // Quickcast fork
         case .emoji: return "face.smiling"
         case .fileSearch: return "doc.text.magnifyingglass"
         case .menuSearch: return "menubar.rectangle"
@@ -69,6 +71,7 @@ enum PaletteMode: String, CaseIterable, Identifiable {
         case .calculatorHistory:
             return String(localized: "Do math, convert units, or search your past calculations…")
         case .dictationHistory: return String(localized: "Search dictations…")  // Quickcast fork
+        case .inlineConfigure: return String(localized: "Type an alias…")  // Quickcast fork
         case .emoji: return String(localized: "Search emoji and symbols…")
         case .fileSearch: return String(localized: "Search files and folders…")
         case .menuSearch: return String(localized: "Search menu bar items…")

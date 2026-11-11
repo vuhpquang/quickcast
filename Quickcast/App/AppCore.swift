@@ -118,6 +118,10 @@ final class AppCore {
             limit: settings.dictationHistoryLimit.rawValue),
         settings: settings, appIndex: appIndex, palette: palette, windowController: windowController,
         paletteCoordinator: paletteCoordinator, core: self)
+    // Quickcast fork: hotkeys and aliases set from the launcher's ⌘K menu.
+    @ObservationIgnored private(set) lazy var inlineConfigureCoordinator = InlineConfigureCoordinator(
+        palette: palette, appIndex: appIndex, visibility: visibility, favorites: favorites,
+        hotKeys: hotKeys, aliases: aliases)
     @ObservationIgnored private(set) lazy var quicklinkCoordinator = QuicklinkCoordinator(
         store: quicklinks, settings: settings,
         appIndex: appIndex, injector: textInjector, hotKeys: hotKeys, favorites: favorites,

@@ -401,10 +401,22 @@ Emoji, Clipboard, Files, Quicklinks, Snippets, Define, Quick AI and the rest of 
 `seeding` set — opens with `<rest>` already typed; anything else launches as ↵ would. A shared alias
 or one nobody holds stays ordinary search text.
 
-Editing lives in Settings only — an alias is one-time configuration like a shortcut, not a
-per-invocation action, so the ⌘K menu stays out of it. Visibility is the one exception, and only in
-one direction: an unwanted result is noticed while searching, so ⌘K can hide a row, but putting it
-back is still the pane's checkbox. Every pane built
+**Set from the launcher (Quickcast fork).** Like Raycast's "Configure inline", ⌘K on any persistent
+row (not a meeting or a query-driven command) offers **Set Alias… / Change Alias…** and **Remove
+Alias**, and on a row that can take a shortcut **Set Hotkey… / Change Hotkey…** and **Remove Hotkey**
+(`InlineConfiguration` in `Launcher/Model/` decides which). Set/Change pushes the `.inlineConfigure`
+palette screen (`InlineConfigureCoordinator` / `InlineConfigureScreen`): for an alias the search field
+holds the current alias, ↵ saves and a blank saves as none; for a hotkey the screen shows Settings'
+own `ShortcutRecorder` and callout, already recording, so the capture session, the paused engines and
+the conflict refusal are the ones Settings uses, and the screen closes when the recording ends (a
+binding lands, ⌫ clears it, Esc or a click cancels). Esc leaves either one without saving, and the
+launcher comes back on the same query with the highlight on the same row, even when the change
+moved it. Writes go through `EntryConfigurationWriter` to `AliasStore.setAlias` and
+`HotKeyManager.setBinding` — the calls `AliasField` and `ShortcutRecorder` make — so Settings, the
+`settings.json` mirror and backups see the same keys. An alias another listed entry already answers
+to is still saved, with a note under the field that Alias + Space won't open a shared alias. Settings
+remains the place to see every alias and shortcut at once. Visibility is one-directional: ⌘K can
+hide a row, but putting it back is still the pane's checkbox. Every pane built
 on `LauncherItemsSection` puts an `AliasField` on each row, dressed like the `ShortcutRecorder`
 beside it; edits store as typed and trim when the field loses focus, and a blank means none. That
 list filters by **membership only**, keeping the index's name order — re-ranking it per keystroke

@@ -692,6 +692,19 @@ run hotkey-dispatch-test   Quickcast/Features/HotKeys/Model/DoubleTapModifier.sw
                            Quickcast/Features/HotKeys/Service/HotKeyManager.swift \
                            Quickcast/Platform/ASCIIKeyboardLayout.swift \
                            Tests/hotkey-dispatch-fixtures.swift
+run inline-configure-test  Quickcast/Features/HotKeys/Model/DoubleTapModifier.swift \
+                           Quickcast/Features/HotKeys/Model/ModifierKey.swift \
+                           Quickcast/Features/HotKeys/Model/HotKeyBinding.swift \
+                           Quickcast/Features/HotKeys/Model/HyperKey.swift \
+                           Quickcast/Features/HotKeys/Model/HIDKeyMapping.swift \
+                           Quickcast/Features/HotKeys/Model/HotKeyAction.swift \
+                           Quickcast/Features/HotKeys/Service/KeyShortcut.swift \
+                           Quickcast/Features/HotKeys/Service/HotKeyManager.swift \
+                           Quickcast/Features/Launcher/Model/InlineConfiguration.swift \
+                           Quickcast/Features/Launcher/Service/AliasStore.swift \
+                           Quickcast/Features/Launcher/Service/EntryConfigurationWriter.swift \
+                           Quickcast/Platform/ASCIIKeyboardLayout.swift \
+                           Tests/hotkey-dispatch-fixtures.swift
 run settings-file-test     Quickcast/Features/Settings/Model/*.swift \
                            Quickcast/Features/Settings/Service/SettingsFileMonitor.swift \
                            Quickcast/Features/Settings/Service/SettingsFileRepository.swift \

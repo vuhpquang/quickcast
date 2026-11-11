@@ -306,7 +306,8 @@ private struct AppRow: View {
     }
 
     private var shortcutCaps: [String]? {
-        guard let action = app.hotKeyAction else { return nil }
+        // Quickcast fork: an extension command's shortcut is keyed by its entry ID.
+        guard let action = app.configurableHotKeyAction else { return nil }
         return hotKeys.binding(for: action)?.keycaps
     }
 

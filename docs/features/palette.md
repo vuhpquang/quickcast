@@ -109,12 +109,15 @@ every screen but two: the clipboard lands past its pins
 | `.snippetEditor`       | `SnippetEditorScreen`       | `SnippetEditorView` (see [snippets.md](snippets.md#launcher-editor))                                     |
 | `.dictionary`          | `DictionaryScreen`          | `DictionaryEntryView` (see [dictionary.md](dictionary.md))                                               |
 | `.extensionCommand`    | `ExtensionCommandScreen`    | `ExtensionCommandView` (see [extensions.md](extensions.md))                                              |
+| `.inlineConfigure`     | `InlineConfigureScreen`     | the row's `ShortcutRecorder`, or its alias in the search field (see [launcher.md](launcher.md#user-aliases)) |
 
 **Tab rings the three surfaces a reader opens directly — launcher → AI chat → clipboard → launcher**
 — unless the screen claims it through `tab(at:backwards:)` (native editors and extension forms walk
 their own fields), or the selected row declares arguments, in which case it walks those fields first (see
 below); every other mode stays off the ring, and is reached by a command or a global hotkey, with
-Uninstall only from a launcher app's Actions menu, scoped to that app. Chat is skipped whole when
+Uninstall only from a launcher app's Actions menu, scoped to that app, and `.inlineConfigure` (Quickcast
+fork) only from a launcher row's **Set/Change Hotkey…** and **Set/Change Alias…** actions, where
+Esc, ↵ or a finished recording pops back onto the same row. Chat is skipped whole when
 `aiEnabled` is off, which leaves the launcher ↔ clipboard flip the ring replaced.
 
 ### Navigation
