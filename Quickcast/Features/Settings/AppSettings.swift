@@ -392,6 +392,11 @@ final class AppSettings {
         didSet { defaults.set(dictationIdleRelease.rawValue, forKey: Key.dictationIdleRelease.rawValue) }
     }
 
+    // Quickcast fork: how many finished dictations Dictation History keeps.
+    var dictationHistoryLimit: DictationHistoryLimit {
+        didSet { defaults.set(dictationHistoryLimit.rawValue, forKey: Key.dictationHistoryLimit.rawValue) }
+    }
+
     var dictationLanguage: String? {
         didSet { defaults.set(dictationLanguage, forKey: Key.dictationLanguage.rawValue) }
     }
@@ -815,6 +820,10 @@ final class AppSettings {
             defaults.object(forKey: Key.dictationIdleRelease.rawValue)
             .flatMap { $0 as? Int }
             .flatMap(DictationIdleRelease.init(rawValue:)) ?? .oneMinute
+        dictationHistoryLimit =  // Quickcast fork
+            defaults.object(forKey: Key.dictationHistoryLimit.rawValue)
+            .flatMap { $0 as? Int }
+            .flatMap(DictationHistoryLimit.init(rawValue:)) ?? .standard
         dictationLanguage =
             defaults.string(forKey: Key.dictationLanguage.rawValue)
             .flatMap(DictationLanguage.init(rawValue:))?.rawValue

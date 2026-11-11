@@ -16,6 +16,7 @@ final class DictationCoordinator {
     private let injector: TextInjector
     private let showMessage: (String, DialogTone) -> Void
     private let confirmEnable: () async -> Bool
+    private let onTranscript: (String, DictationModel, InjectionTarget?) -> Void  // Quickcast fork
     @ObservationIgnored private var phase: Phase = .idle
     @ObservationIgnored private var token = UUID()
     @ObservationIgnored private var enableTask: Task<Void, Never>?
@@ -37,8 +38,10 @@ final class DictationCoordinator {
         settings: AppSettings, hotKeys: HotKeyManager, models: DictationModelStore,
         injector: TextInjector, audioDucker: DictationAudioDucker,
         confirmEnable: @escaping () async -> Bool,
-        showMessage: @escaping (String, DialogTone) -> Void
+        showMessage: @escaping (String, DialogTone) -> Void,
+        onTranscript: @escaping (String, DictationModel, InjectionTarget?) -> Void = { _, _, _ in }
     ) {
+        self.onTranscript = onTranscript  // Quickcast fork: Dictation History
         self.settings = settings
         self.hotKeys = hotKeys
         self.models = models
@@ -248,6 +251,7 @@ final class DictationCoordinator {
                 let target = self.target
                 let assembled = liveText + text
                 guard !text.isEmpty else { finishWithoutRemainder(destination); return }
+                onTranscript(assembled, model, target)  // Quickcast fork: Dictation History
                 panel.close()
                 if destination.pastes {
                     injector.deliver(
@@ -286,6 +290,7 @@ final class DictationCoordinator {
     private func finishWithoutRemainder(_ destination: DictationDestination) {
         let text = liveText
         let lost = liveDeliveryFailed
+        if !text.isEmpty { onTranscript(text, settings.dictationModel, target) }  // Quickcast fork
         reset(cancelTranscription: false)
         if !text.isEmpty, destination.copies { Paster.copyPlainText(text) }
         if lost, destination.pastes {

@@ -37,6 +37,7 @@ extension LauncherCoordinator {
         case .clipboardHistory: palette.togglePalette(mode: .clipboard, seeding: text)
         case .searchEmoji: palette.togglePalette(mode: .emoji, seeding: text)
         case .calculatorHistory: palette.togglePalette(mode: .calculatorHistory, seeding: text)
+        case .dictationHistory: core.dictationHistoryCoordinator.show(query: text)
         case .searchQuicklinks: palette.togglePalette(mode: .quicklinks, seeding: text)
         case .searchFiles: core.fileSearchCoordinator.show(query: text)
         case .define: core.dictionaryCoordinator.show(term: text)

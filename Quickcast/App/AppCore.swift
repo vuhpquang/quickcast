@@ -107,7 +107,17 @@ final class AppCore {
                 symbol: "waveform", confirmTitle: String(localized: "Continue"), tone: .neutral,
                 confirmRole: .standard)
         },
-        showMessage: { [unowned self] in self.showMessage($0, tone: $1) })
+        showMessage: { [unowned self] in self.showMessage($0, tone: $1) },
+        onTranscript: { [unowned self] in  // Quickcast fork: Dictation History
+            self.dictationHistoryCoordinator.record($0, model: $1, target: $2)
+        })
+    // Quickcast fork: Dictation History.
+    @ObservationIgnored private(set) lazy var dictationHistoryCoordinator = DictationHistoryCoordinator(
+        store: DictationHistoryStore(
+            fileURL: AppPaths.applicationSupport().appendingPathComponent("dictation-history.json"),
+            limit: settings.dictationHistoryLimit.rawValue),
+        settings: settings, appIndex: appIndex, palette: palette, windowController: windowController,
+        paletteCoordinator: paletteCoordinator, core: self)
     @ObservationIgnored private(set) lazy var quicklinkCoordinator = QuicklinkCoordinator(
         store: quicklinks, settings: settings,
         appIndex: appIndex, injector: textInjector, hotKeys: hotKeys, favorites: favorites,
@@ -303,6 +313,7 @@ final class AppCore {
             extensions.start(appIndex: appIndex, coordinator: extensionCoordinator)
             extensionCoordinator.applyEnabled()
             fileSearchCoordinator.applyEnabled()
+            dictationHistoryCoordinator.applyEnabled()  // Quickcast fork
             windowSwitchCoordinator.applyEnabled()
             menuSearchCoordinator.applyEnabled()
             fileSearchCoordinator.applyPolicy()
@@ -739,6 +750,9 @@ final class AppCore {
         track(
             { _ = $0.notesShowsInMenuBar }, reproject: { $0.notesCoordinator.applyMenuBarItem() })
         track({ _ = $0.aiEnabled }, reproject: { $0.aiChatCoordinator.applyEnabled() })
+        // Quickcast fork: Dictation History follows the Dictation switch and its own limit.
+        track({ _ = $0.dictationEnabled }, reproject: { $0.dictationHistoryCoordinator.applyEnabled() })
+        track({ _ = $0.dictationHistoryLimit }, reproject: { $0.dictationHistoryCoordinator.applyLimit() })
         track(
             { _ = $0.dictationIdleRelease },
             reproject: {

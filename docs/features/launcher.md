@@ -680,8 +680,8 @@ and three places read it: `FeatureCommandsSection` draws the pane's rows from it
 category gate for it in both `isVisible` and `allowsHotKey`. Stamping the entry rather than sniffing its
 id is what keeps "which pane owns this" out of the entry-ID namespace.
 
-Eleven panes own commands today — AI, Quick Actions, File Search, Notes, Snippets, Navigation,
-Window Management, Clipboard, Emoji, Calendar and Quicklinks. What is left in Settings › Commands is
+Thirteen panes own commands today — AI, Quick Actions, File Search, Notes, Snippets, Navigation,
+Window Management, Clipboard, Emoji, Calendar, Quicklinks, LaunchApp and Dictation. What is left in Settings › Commands is
 the set no feature switch governs: Calculator History, Open Camera, the three backup commands, Check
 for Updates, Quickcast Settings, About, Support and Quit.
 

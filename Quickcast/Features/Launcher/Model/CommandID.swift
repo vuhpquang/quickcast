@@ -13,6 +13,7 @@ enum CommandID: String, CaseIterable, Sendable {
     case pasteSequentially = "command:paste-sequentially"
     case searchEmoji = "command:search-emoji"
     case openLaunchApp = "command:open-launchapp"
+    case dictationHistory = "command:dictation-history"  // Quickcast fork
     case searchFiles = "command:search-files"
     case searchMenuItems = "command:search-menu-items"
     case switchWindows = "command:switch-windows"
@@ -89,6 +90,7 @@ enum CommandID: String, CaseIterable, Sendable {
         case .pasteSequentially: return "Paste Sequentially"
         case .searchEmoji: return "Search Emoji & Symbols"
         case .openLaunchApp: return "Open LaunchApp"
+        case .dictationHistory: return "Dictation History"  // Quickcast fork
         case .searchFiles: return "Search Files"
         case .searchMenuItems: return "Search Menu Bar Items"
         case .switchWindows: return "Switch Windows"
@@ -141,6 +143,7 @@ enum CommandID: String, CaseIterable, Sendable {
         case .pasteSequentially: return "list.bullet.clipboard"
         case .searchEmoji: return "face.smiling"
         case .openLaunchApp: return "square.grid.3x3"
+        case .dictationHistory: return "waveform.badge.magnifyingglass"  // Quickcast fork
         case .searchFiles: return "doc.text.magnifyingglass"
         case .searchMenuItems: return "menubar.rectangle"
         case .switchWindows, .switchWindowsBackwards: return "macwindow.on.rectangle"

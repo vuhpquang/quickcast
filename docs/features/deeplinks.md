@@ -121,7 +121,7 @@ ignored, because each built-in already knows whether it shows a screen.
 
 The search screens are `clipboard-history`, `search-emoji`, `calculator-history`,
 `search-quicklinks`, `search-files`, `define`, `search-snippets`, `search-custom-commands`,
-`search-menu-items` and `switch-windows`. A missing quicklink or custom-command argument opens the
+`search-menu-items`, `switch-windows` and `dictation-history`. A missing quicklink or custom-command argument opens the
 row's fields, as a hotkey with no selection does. Any other target ignores its input.
 
 - A `create-*` list asks once, then adds every item it can, skipping duplicates as a file import

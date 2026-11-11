@@ -65,6 +65,7 @@ extension SettingsTab {
         case .clipboard: [.clipboardHistory, .pasteSequentially]
         case .emoji: [.searchEmoji]
         case .launchApp: [.openLaunchApp]
+        case .dictation: [.dictationHistory]  // Quickcast fork
         case .calendar:
             [.joinNextMeeting, .mySchedule, .createEvent, .copyMeetingLink, .openInCalendar]
         default: []

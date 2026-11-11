@@ -66,6 +66,7 @@ enum SettingsFileKey: String, CaseIterable, Sendable {
     case dictationAdaptsCapitalization = "dictation.adaptsCapitalization"
     case dictationLiveInsertion = "dictation.liveInsertion"
     case dictationIdleRelease = "dictation.releaseAfterMinutes"
+    case dictationHistoryLimit = "dictation.historyLimit"  // Quickcast fork
     case dictationLanguage = "dictation.language"
     case fileSearchEnabled = "fileSearch.enabled"
     case fileSearchScopes = "fileSearch.scopes"

@@ -79,6 +79,8 @@ struct DictationSettingsView: View {
                         SettingsRowTitle(.dictationCommands, "Play sounds")
                         Text("Play a sound when recording starts and stops.")
                     }
+                    // Quickcast fork: Dictation History's alias, hotkey and launcher checkbox.
+                    ForEach(CommandCatalog.entries(ownedBy: .dictation)) { FeatureCommandRow(entry: $0) }
                 } header: {
                     SettingsSectionHeader(.dictationCommands)
                 }
@@ -158,6 +160,8 @@ struct DictationSettingsView: View {
                 } footer: {
                     Text("Releasing it when idle frees memory. The next dictation takes a moment longer.")
                 }
+
+                DictationHistorySettingsSection()  // Quickcast fork
 
                 Section {
                     Picker(selection: microphoneBinding) {

@@ -114,6 +114,38 @@ compilation of its 2-bit weights; Ultra's encoder and both variants' decoder/joi
   without disabling contextual spaces; if an app does not expose that context through
   Accessibility, the plain transcript is inserted without guessing.
 
+## Dictation History (Quickcast fork)
+
+Each finished dictation is kept locally and browsed from the **Dictation History** command
+(`command:dictation-history`), a palette sub-screen like Calculator History.
+
+- `DictationCoordinator` reports the delivered text once per session through its `onTranscript`
+  hook: the assembled live chunks plus the final remainder, or the live chunks alone when no
+  remainder was transcribed. Empty text, cancelled sessions and failed transcriptions record nothing.
+  A failed paste still records, since the text was produced and may have been copied.
+- `DictationHistoryStore` (`Model/`, Foundation only) keeps entries newest first in
+  `dictation-history.json` under this build's Application Support, written atomically on every
+  change. Nothing is sent anywhere, and an empty history leaves no file behind.
+- Each entry stores the trimmed text, date, word count (Foundation word boundaries, so languages
+  written without spaces still count), the target app's name and bundle ID (Quickcast itself for
+  the AI Chat composer mic) and the model's identifier and title.
+- Settings › Dictation › History sets how many are kept (`dictationHistoryLimit`, settings.json
+  `dictation.historyLimit`): Off, 25, 50, 100 (default), 250 or 500. Lowering it drops the oldest at
+  once; Off deletes everything and records nothing. Clear History… confirms first. Like every
+  Dictation preference the limit stays out of backups.
+- The command is listed only while Dictation is enabled (`AppIndex.setCommandsVisible`), and turning
+  Dictation off leaves the screen if it is open; kept history stays until cleared. It sits in the
+  Dictation pane's Commands section with alias, hotkey and launcher checkbox. Deeplink and alias +
+  Space open it with the text as the query; the link needs no consent.
+- The screen searches text and app name. ↵ pastes into the app behind the palette through
+  `Paster.pasteString` (marked, so it does not re-enter clipboard history), ⌘↵ copies, ⌥↵ pastes and
+  keeps the palette open, ⌃X deletes the row and ⌃⇧X clears all after a confirmation. ⌘K lists the
+  same actions. The detail pane shows the full text with application, model, date, words and
+  characters.
+
+`dictation-history-test` covers append, the cap, Off, clear, removal, search, word counts and the
+file round trip.
+
 ## Validation
 
 `dictation-cue-test` checks system resource paths, playback ordering and missing sounds without audio output.

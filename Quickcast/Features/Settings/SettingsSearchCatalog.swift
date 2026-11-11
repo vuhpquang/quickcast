@@ -363,7 +363,10 @@ enum SettingsSearchCatalog {
         .init(.dictationOutput, "Microphone"),
         .init(.dictationOutput, "When finished"),
         .init(.dictationOutput, "Adapt capitalization", keywords: ["uppercase", "lowercase", "sentence"]),
-        .init(.dictationOutput, "Insert while recording", keywords: ["live", "streaming", "chunk", "pause"])
+        .init(.dictationOutput, "Insert while recording", keywords: ["live", "streaming", "chunk", "pause"]),
+        // Quickcast fork: Dictation History.
+        .init(group: .dictationCommands, "Dictation History", keywords: ["alias", "hotkey", "transcript"]),
+        .init(.dictationHistory, "Keep recent dictations", keywords: ["history", "transcript", "clear", "past"])
     ]
 
     private static let fileSearch: [SettingsSearchEntry] = [

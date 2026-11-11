@@ -111,6 +111,7 @@ enum SettingsFileSchema {
         case .dictationAdaptsCapitalization: return bind(settings, \.dictationAdaptsCapitalization)
         case .dictationLiveInsertion: return bind(settings, \.dictationLiveInsertion)
         case .dictationIdleRelease: return bind(settings, \.dictationIdleRelease)
+        case .dictationHistoryLimit: return bind(settings, \.dictationHistoryLimit)  // Quickcast fork
         case .dictationLanguage:
             return bind(settings, \.dictationLanguage) { language in
                 guard let language else { return .some(nil) }
@@ -193,6 +194,7 @@ extension DictationModel: SettingsFileRawValue {}
 extension DictationMode: SettingsFileRawValue {}
 extension DictationDestination: SettingsFileRawValue {}
 extension DictationIdleRelease: SettingsFileRawValue {}
+extension DictationHistoryLimit: SettingsFileRawValue {}  // Quickcast fork
 extension JoinWindow: SettingsFileRawValue {}
 
 extension ClipboardRetention: SettingsFileToken {

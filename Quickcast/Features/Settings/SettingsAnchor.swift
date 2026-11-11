@@ -66,6 +66,7 @@ extension SettingsAnchor {
     static let dictationModel = Self(tab: .dictation, title: "Model")
     static let dictationMemory = Self(tab: .dictation, title: "Memory")
     static let dictationOutput = Self(tab: .dictation, title: "Output")
+    static let dictationHistory = Self(tab: .dictation, title: "History")  // Quickcast fork
 
     static let fileSearchFileSearch = Self(tab: .fileSearch, title: "File Search")
     static let fileSearchFullDiskAccess = Self(tab: .fileSearch, title: "Full Disk Access")

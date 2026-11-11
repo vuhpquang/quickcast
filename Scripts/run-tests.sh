@@ -361,6 +361,10 @@ run dictionary-test        Quickcast/Features/Dictionary/Model/DictionaryEntry.s
                            Quickcast/Features/Dictionary/Model/DictionaryMarkup.swift
 run dictation-test         Quickcast/Features/Dictation/Model/DictationModel.swift Quickcast/Features/Dictation/Model/DictationIdleRelease.swift Quickcast/Features/Dictation/Model/DictationLanguage.swift Quickcast/Features/Dictation/Model/DictationTextFormatter.swift
 run dictation-cue-test     Quickcast/Features/Dictation/Service/DictationCueRunner.swift
+run dictation-history-test Quickcast/Features/Dictation/Model/DictationHistoryEntry.swift \
+                           Quickcast/Features/Dictation/Model/DictationHistoryLimit.swift \
+                           Quickcast/Features/Dictation/Model/DictationHistoryStore.swift \
+                           Quickcast/Platform/Memo.swift
 run dictation-field-test   Quickcast/Features/Dictation/Model/DictationModel.swift \
                            Quickcast/Features/Dictation/Model/DictationAudioChunks.swift \
                            Quickcast/Features/Dictation/Model/DictationMode.swift \
