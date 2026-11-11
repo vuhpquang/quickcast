@@ -132,7 +132,6 @@ Quickcast is an all-in-one launcher, not a full window manager. Its window tools
 - **Layouts per workspace (like FlashSpace).** ([#639](https://github.com/vuhpquang/quickcast/issues/639))
 - **Switch Windows changes.** The order stays stable for muscle memory. No switch-on-release, and no
   alias search. ([#1506](https://github.com/vuhpquang/quickcast/issues/1506), [#1590](https://github.com/vuhpquang/quickcast/issues/1590), [#1589](https://github.com/vuhpquang/quickcast/issues/1589))
-- **Follow Stage Manager.** **Instead:** try Window Rooms. ([#1249](https://github.com/vuhpquang/quickcast/issues/1249))
 - **Safari's width after Mission Control.** Safari may reset its width afterwards. ([#1556](https://github.com/vuhpquang/quickcast/issues/1556))
 
 ## Notes

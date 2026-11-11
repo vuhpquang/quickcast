@@ -58,6 +58,7 @@ enum AppSettingsKey: String, CaseIterable {
     case windowCycle = "windowManagementCycleMode"
     case windowWrapsDisplays = "windowManagementWrapDisplays"
     case windowKeepsProportions = "windowManagementKeepProportions"
+    case windowRespectsStageManager = "windowManagementRespectStageManager"  // Quickcast fork
     case windowLayoutsShowInLauncher = "windowLayoutsShowInLauncher"
     case windowRoomsShowInLauncher = "windowRoomsShowInLauncher"
     case quicklinksEnabled = "quicklinksEnabled"

@@ -97,6 +97,12 @@ struct WindowManagementSettingsView: View {
                 Text("Off keeps a window's size when it moves to another display.")
             }
 
+            // Quickcast fork: keeps window commands off the Stage Manager strip.
+            Toggle(isOn: $settings.windowRespectsStageManager) {
+                SettingsRowTitle(.windowManagementOptions, "Respect Stage Manager")
+                Text("Windows leave the recent apps strip uncovered while Stage Manager is on.")
+            }
+
             LabeledContent {
                 HStack(spacing: Theme.Spacing.sm) {
                     Picker("Shortcut preset", selection: $chosenPreset) {

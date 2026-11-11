@@ -51,6 +51,7 @@ enum SettingsBackupCoverage {
         "windowCycle": .windowCycle,
         "windowWrapsDisplays": .windowWrapsDisplays,
         "windowKeepsProportions": .windowKeepsProportions,
+        "windowRespectsStageManager": .windowRespectsStageManager,  // Quickcast fork
         "windowLayoutsShowInLauncher": .windowLayoutsShowInLauncher,
         "windowRoomsShowInLauncher": .windowRoomsShowInLauncher,
         "quicklinksEnabled": .quicklinksEnabled,

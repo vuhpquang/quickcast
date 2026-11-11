@@ -42,6 +42,7 @@ Move to Top Edge · Move to Bottom Edge · Move Window · Move to Next Display �
 | Show in launcher         | On · Off                                 | On       |
 | Cycling                  | None · Cycle ½, ⅓ and ⅔ · Cycle displays | **None** |
 | Gap between windows      | 0 to 64 points, in steps of 2            | **0**    |
+| Respect Stage Manager    | On · Off                                 | On       |
 
 Each command's shortcut, alias and launcher checkbox are in the same pane. To turn off a single
 command, clear its shortcut and its checkbox. There's no separate switch for each command.
@@ -69,6 +70,13 @@ same at two thirds of the width.
 
 A window that's too large or partly off-screen is always moved back onto the display. The usable
 area already excludes the menu bar, the Dock and the notch.
+
+## Stage Manager
+
+With **Respect Stage Manager** on, window commands leave Stage Manager's recent apps strip
+uncovered: halves, Maximize and the rest stop at the strip. **Center** still centers on the whole
+screen when the window doesn't reach the strip, moves beside it when it would, and only shrinks a
+window too wide to fit there. Nothing changes while Stage Manager is off or hides recent apps.
 
 ## Custom sizes
 

@@ -134,6 +134,8 @@ enum SettingsFileSchema {
         case .windowCycle: return bind(settings, \.windowCycle)
         case .windowWrapsDisplays: return bind(settings, \.windowWrapsDisplays)
         case .windowKeepsProportions: return bind(settings, \.windowKeepsProportions)
+        case .windowRespectsStageManager:  // Quickcast fork
+            return bind(settings, \.windowRespectsStageManager)
         case .windowLayoutsShowInLauncher: return bind(settings, \.windowLayoutsShowInLauncher)
         case .windowRoomsShowInLauncher: return bind(settings, \.windowRoomsShowInLauncher)
         case .windowShortcuts: return windowManagement.commandShortcutsBinding(for: key)

@@ -93,6 +93,7 @@ enum SettingsFileKey: String, CaseIterable, Sendable {
     case windowCycle = "windowManagement.cycle"
     case windowWrapsDisplays = "windowManagement.wrapDisplays"
     case windowKeepsProportions = "windowManagement.keepProportions"
+    case windowRespectsStageManager = "windowManagement.respectStageManager"  // Quickcast fork
     case windowLayoutsShowInLauncher = "windowManagement.layoutsShowInLauncher"
     case windowRoomsShowInLauncher = "windowManagement.roomsShowInLauncher"
     case windowShortcuts = "windowManagement.shortcuts"

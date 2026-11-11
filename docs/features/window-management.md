@@ -54,6 +54,9 @@ entries and a still-registered shortcut moves nothing.
 | `Model/CustomWindowSize+Move.swift`  | Foundation                   | **Pure.** Fork: Move Window's typed X and Y as a custom size        |
 | `UI/WindowCommandCoordinator+Move.swift` | Foundation               | Fork: runs Move Window, or opens its fields when input is short     |
 | `UI/MoveWindowArgumentsAccessory.swift` | SwiftUI                   | Fork: Move Window's X and Y fields in root search                   |
+| `Model/StageManagerStrip.swift`      | Foundation + CoreGraphics    | **Pure.** Fork: the strip's side and width, the inset, Center beside it |
+| `Service/StageManagerState.swift`    | AppKit                       | Fork: reads Stage Manager's defaults and measures the strip         |
+| `UI/WindowCommandCoordinator+StageManager.swift` | AppKit           | Fork: the strip a command keeps clear, or nil with the setting off  |
 
 The feature also owns **[Window Layouts](window-layouts.md)** — saved multi-display arrangements
 applied in one pass — and **[Rooms](window-rooms.md)**, named sets of windows that tile on the
@@ -196,6 +199,37 @@ What upstream called odd side effects of a bare position write, and what answers
 A custom size shares the window commands' `AppEntry.Kind`, their launcher section and their
 `windowManagementShowInLauncher` switch, the way custom Quick Actions share the shipped four's:
 `WindowCommandCatalog` claims an entry first, and `CustomWindowSize.id(fromEntryID:)` the rest.
+
+## Stage Manager
+
+The fork reverses the upstream "Follow Stage Manager" decision (#1249). **Respect Stage Manager**
+(Settings › Window Management › Options, on by default, `windowRespectsStageManager`) keeps window
+commands off Stage Manager's recent apps strip while it shows.
+
+- **When.** `StageManagerState.strip(geometry:)` reads `com.apple.WindowManager` fresh for every
+  command (`CFPreferencesAppSynchronize` first, since the Control Center toggle writes it from
+  another process): nothing is reserved unless `GloballyEnabled` is on and `AutoHide` — "Show recent
+  apps" off — is not. With the setting off, or Stage Manager off, every command is exactly upstream's.
+- **Where.** The strip sits on the left, and moves to the right only when the Dock is on the left
+  (`com.apple.dock` `orientation`), as Rectangle reads it. Its width is measured from the
+  WindowManager process's on-screen windows (the thumbnails, via `CGWindowListCopyWindowInfo`, which
+  needs no Screen Recording grant for bounds) on the main display: the farthest thumbnail edge from
+  the strip side. A reading outside 80–360 pt, or none at all, falls back to 190 pt, Rectangle's own
+  default reservation. One width serves every display, each inset on the same side.
+- **What.** Every command `WindowMover` places — tiles, sizing, nudges and edge moves, display
+  moves, custom sizes and Move Window — sees each display's visible frame with the strip taken off
+  (`StageManagerStrip.inset`), so the strip is just another screen edge and the gap rule applies
+  against it. The engine is untouched; the mover hands it inset screens. A display narrower than
+  three strips keeps its full width rather than a sliver. Restore returns to the recorded frame and
+  Fullscreen and Spaces have no frame, so none of them change. Window Layouts and Rooms place
+  through their own runners and are not affected.
+- **Center** is the one command with its own rule, Raycast's: it centres on the whole display when
+  the centred window clears the strip, so with room nothing changes from upstream; otherwise it
+  centres in the space beside the strip at its own size, and shrinks only when it does not fit
+  there (`StageManagerStrip.centered`).
+
+Stage Manager also hides the strip by itself when a window is dragged over it; a command doesn't try
+to detect that moment, so a window placed while the strip is hidden still leaves room for it.
 
 ## Cycling and Restore
 
@@ -452,8 +486,10 @@ and every shortcut stays editable afterwards.
 - **`AppIndex.setCustomWindowSizes(_:)`** publishes the custom-size slice immediately after the
   window commands, inside the same section. Custom sizes and their bindings ride in settings backups.
 - **Settings** — `windowManagementEnabled` (off), `windowManagementShowInLauncher` (on), `windowGap`
-  (0), `windowCycle` (`.off`), `windowWrapsDisplays` (on) and `windowKeepsProportions` (on). All six
-  ride in settings backups: unlike `snippetsEnabled` they grant no permission class of their own.
+  (0), `windowCycle` (`.off`), `windowWrapsDisplays` (on), `windowKeepsProportions` (on) and the
+  fork's `windowRespectsStageManager` (on, `windowManagement.respectStageManager` in
+  `settings.json`). All seven ride in settings backups: unlike `snippetsEnabled` they grant no
+  permission class of their own.
 - **Per-command visibility** reuses `VisibilityStore` as-is; clearing a recorded shortcut is how a
   hotkey is disabled, so there is no separate per-command enabled flag. Each command and custom-size
   row carries an alias field, dimmed while its entry is hidden from the launcher. Window commands
@@ -486,6 +522,11 @@ persistence. Moves add Current lengths, percent offsets, every anchor clamped on
 window's own size, an oversized window left unshrunk, moves on negative-origin displays, legacy
 offsets decoding as points, and Move Window's parser refusing bad input.
 
+The Stage Manager strip is covered in `Tests/window-command-test.swift`: its side from the Dock,
+the measured width and every fallback, the inset on both sides and on narrow and negative-origin
+displays, Center's true centre, shift and shrink with and without a gap and on an off-origin
+display, and a sweep feeding every command strip-inset displays to check none covers the strip.
+
 Everything runs headless because the layer is pure. `WindowMover` and `SpaceSwitcher` are not compiled
 into either harness and have no automated coverage — the AX and `CGEvent` paths need manual
 verification, particularly:
@@ -510,3 +551,7 @@ verification, particularly:
 7. Move Window and a Current × Current custom size: the window keeps its size, including a Terminal
    window (cell-snapped) and an Electron app; on a secondary display left of the primary; and a
    window larger than its display moves without shrinking.
+8. Respect Stage Manager, with Stage Manager on and apps in the strip: Center on a narrow window
+   is truly centred, on a wide one it sits beside the strip, Maximize and Left Half stop at the
+   strip; with the Dock on the left the strip and the inset move right; "Show recent apps" off
+   reserves nothing; the setting off restores upstream behaviour.

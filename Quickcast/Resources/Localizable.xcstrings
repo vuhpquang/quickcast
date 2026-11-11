@@ -3099,16 +3099,16 @@
     },
     "%@ · Offset %@, %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ · Offset %2$@, %3$@"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ · Versatz %2$@, %3$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · Offset %2$@, %3$@"
           }
         },
         "es" : {
@@ -105694,6 +105694,58 @@
         }
       }
     },
+    "Respect Stage Manager" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stage Manager berücksichtigen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Respetar Organizador visual"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Respecter Stage Manager"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ステージマネージャを考慮"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스테이지 매니저 고려"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Respeitar Organizador Visual"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Учитывать Stage Manager"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "避开台前调度"
+          }
+        }
+      }
+    },
     "Response interrupted." : {
       "localizations" : {
         "de" : {
@@ -139765,6 +139817,58 @@
         }
       }
     },
+    "Windows leave the recent apps strip uncovered while Stage Manager is on." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fenster lassen die Leiste der zuletzt verwendeten Apps frei, solange Stage Manager aktiv ist."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las ventanas no tapan la franja de apps recientes mientras Organizador visual está activado."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les fenêtres laissent visible la bande des apps récentes lorsque Stage Manager est activé."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ステージマネージャがオンのとき、ウインドウが最近使ったアプリの列を覆わないようにします。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스테이지 매니저가 켜져 있는 동안 윈도우가 최근 앱 영역을 가리지 않습니다."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As janelas deixam a faixa de apps recentes descoberta enquanto o Organizador Visual está ativado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Окна не закрывают полосу недавних приложений, пока включен Stage Manager."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "台前调度打开时，窗口不会遮住最近使用的应用条。"
+          }
+        }
+      }
+    },
     "With a decimal comma, use ; to separate arguments." : {
       "localizations" : {
         "de" : {
@@ -144960,18 +145064,17 @@
       }
     },
     "window-size-unit-current" : {
-      "extractionState" : "extracted_with_value",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Current"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aktuell"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current"
           }
         },
         "es" : {

@@ -470,6 +470,9 @@ enum SettingsSearchCatalog {
         .init(
             .windowManagementOptions, "Keep aspect ratio",
             keywords: ["next display", "previous display", "monitor", "scale", "resize"]),
+        .init(  // Quickcast fork
+            .windowManagementOptions, "Respect Stage Manager",
+            keywords: ["stage manager", "strip", "recent apps", "center", "sidebar"]),
         .init(
             .windowManagementOptions, "Shortcut preset",
             keywords: ["rectangle", "magnet", "spectacle", "defaults", "import", "shortcuts"]),

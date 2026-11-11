@@ -635,6 +635,13 @@ final class AppSettings {
         }
     }
 
+    /// Quickcast fork: window commands leave the Stage Manager strip uncovered while it shows.
+    var windowRespectsStageManager: Bool {
+        didSet {
+            defaults.set(windowRespectsStageManager, forKey: Key.windowRespectsStageManager.rawValue)
+        }
+    }
+
     /// Off means fully off, down to a still-registered shortcut opening nothing.
     var quicklinksEnabled: Bool {
         didSet { defaults.set(quicklinksEnabled, forKey: Key.quicklinksEnabled.rawValue) }
@@ -914,6 +921,9 @@ final class AppSettings {
         windowKeepsProportions =
             defaults.object(forKey: Key.windowKeepsProportions.rawValue) == nil
             || defaults.bool(forKey: Key.windowKeepsProportions.rawValue)
+        windowRespectsStageManager =  // Quickcast fork
+            defaults.object(forKey: Key.windowRespectsStageManager.rawValue) == nil
+            || defaults.bool(forKey: Key.windowRespectsStageManager.rawValue)
         windowLayoutsShowInLauncher =
             defaults.object(forKey: Key.windowLayoutsShowInLauncher.rawValue) == nil
             || defaults.bool(forKey: Key.windowLayoutsShowInLauncher.rawValue)

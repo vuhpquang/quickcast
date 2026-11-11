@@ -109,6 +109,9 @@ struct WindowCommandTests {
         testRestore()
         testMemory()
         testFuzz()
+        testStageManagerStrip()
+        testStageManagerCenter()
+        testStageManagerSweep()
 
         print("\(passes) passed, \(failures) failed")
         if failures > 0 { exit(1) }
@@ -1331,4 +1334,152 @@ struct WindowCommandTests {
         expect(problems.isEmpty, "fuzz sweep found no violations")
         for problem in problems.prefix(10) { print("      \(problem)") }
     }
+
+    // MARK: - Stage Manager (Quickcast fork)
+
+    /// To the right of the primary and taller, so its top sits above the AX origin.
+    static let stripRightScreen = WindowPlacementEngine.Screen(
+        id: 2, frame: CGRect(x: 1440, y: -300, width: 2560, height: 1440),
+        visibleFrame: CGRect(x: 1440, y: -275, width: 2560, height: 1415))
+
+    static func testStageManagerStrip() {
+        typealias Strip = StageManagerStrip
+        expect(Strip.edge(dockOrientation: nil) == .left, "the strip sits on the left by default")
+        expect(Strip.edge(dockOrientation: "bottom") == .left, "a bottom Dock leaves it on the left")
+        expect(Strip.edge(dockOrientation: "left") == .right, "a left Dock pushes it to the right")
+
+        let visible = mainScreen.visibleFrame
+        let left = Strip(edge: .left, width: 200)
+        expectRect(
+            left.inset(visible), CGRect(x: 200, y: 0, width: 1240, height: 900),
+            "a left strip moves the visible frame's leading edge")
+        expectRect(
+            Strip(edge: .right, width: 200).inset(visible),
+            CGRect(x: 0, y: 0, width: 1240, height: 900), "a right strip pulls in the trailing edge")
+        let narrow = CGRect(x: 0, y: 0, width: 500, height: 400)
+        expectRect(left.inset(narrow), narrow, "a display under three strips wide keeps its width")
+        expect(Strip(edge: .left, width: -10).width == 0, "a negative width reserves nothing")
+        expect(Strip(edge: .left, width: .nan).width == 0, "a non-finite width reserves nothing")
+
+        let offOrigin = WindowPlacementEngine.Screen(
+            id: 9, frame: CGRect(x: -1920, y: -300, width: 1920, height: 1080),
+            visibleFrame: CGRect(x: -1920, y: -275, width: 1920, height: 1055))
+        let inset = left.inset([mainScreen, offOrigin])
+        expect(
+            inset.map(\.id) == [1, 9] && inset.map(\.frame) == [mainScreen.frame, offOrigin.frame],
+            "insetting keeps every display's id and full frame")
+        expectRect(
+            inset[1].visibleFrame, CGRect(x: -1720, y: -275, width: 1720, height: 1055),
+            "a negative-origin display is inset from its own edge")
+
+        let thumbs = [
+            CGRect(x: 12, y: 200, width: 150, height: 110),
+            CGRect(x: 20, y: 340, width: 160, height: 110)
+        ]
+        expect(
+            Strip.width(thumbnails: thumbs, in: visible, edge: .left) == 180,
+            "the width reaches the widest thumbnail's far edge")
+        expect(
+            Strip.width(
+                thumbnails: [CGRect(x: 1290, y: 200, width: 130, height: 100)], in: visible,
+                edge: .right) == 150,
+            "a right strip measures from the trailing edge")
+        expect(
+            Strip.width(thumbnails: [], in: visible, edge: .left) == Strip.defaultWidth,
+            "no thumbnails falls back to the default reservation")
+        expect(
+            Strip.width(thumbnails: [visible], in: visible, edge: .left) == Strip.defaultWidth,
+            "a full-screen WindowManager surface is not a thumbnail")
+        expect(
+            Strip.width(
+                thumbnails: [CGRect(x: 3000, y: 0, width: 100, height: 100)], in: visible,
+                edge: .left) == Strip.defaultWidth,
+            "a thumbnail on another display does not measure this one")
+        expect(
+            Strip.width(thumbnails: [CGRect(x: 0, y: 0, width: 30, height: 30)], in: visible, edge: .left)
+                == Strip.defaultWidth,
+            "an implausibly thin measurement falls back to the default")
+    }
+
+    static func testStageManagerCenter() {
+        let left = StageManagerStrip(edge: .left, width: 200)
+        let right = StageManagerStrip(edge: .right, width: 200)
+        let visible = mainScreen.visibleFrame
+
+        expectRect(
+            left.centered(CGSize(width: 600, height: 400), in: visible, gap: 0) ?? .null,
+            CGRect(x: 420, y: 250, width: 600, height: 400),
+            "a window that clears the strip at true centre is truly centred")
+        expect(
+            left.centered(CGSize(width: 600, height: 400), in: visible, gap: 0) ?? .null
+                == frame(.center, window: CGRect(x: 5, y: 5, width: 600, height: 400)),
+            "with room, Center is exactly the upstream Center")
+        expectRect(
+            left.centered(CGSize(width: 1100, height: 400), in: visible, gap: 0) ?? .null,
+            CGRect(x: 270, y: 250, width: 1100, height: 400),
+            "a window that would cover the strip centres beside it at its own size")
+        expectRect(
+            right.centered(CGSize(width: 1100, height: 400), in: visible, gap: 0) ?? .null,
+            CGRect(x: 70, y: 250, width: 1100, height: 400),
+            "a right strip shifts the window left instead")
+        expectRect(
+            left.centered(CGSize(width: 1400, height: 1000), in: visible, gap: 0) ?? .null,
+            CGRect(x: 200, y: 0, width: 1240, height: 900),
+            "only a window that can't fit beside the strip is shrunk")
+        expectRect(
+            left.centered(CGSize(width: 1100, height: 400), in: visible, gap: 10) ?? .null,
+            CGRect(x: 270, y: 250, width: 1100, height: 400),
+            "the gap applies inside the strip-free box")
+        expectRect(
+            left.centered(CGSize(width: 600, height: 400), in: CGRect(x: 0, y: 0, width: 500, height: 400), gap: 0) ?? .null,
+            CGRect(x: 0, y: 0, width: 500, height: 400),
+            "a display too narrow to give up a strip centres as upstream does")
+
+        let screens = [mainScreen, stripRightScreen]
+        let placement = left.centerPlacement(
+            for: CGRect(x: 2000, y: 100, width: 2200, height: 300), screens: screens, gap: 0)
+        expect(placement?.screenID == stripRightScreen.id, "Center stays on the window's display")
+        expectRect(
+            placement?.frame ?? .zero, CGRect(x: 1720, y: 283, width: 2200, height: 300),
+            "an off-origin display centres beside its own strip")
+        expect(
+            placement?.anchor == .centered && placement?.resizes == true,
+            "a refused shrink re-seats centred")
+    }
+
+    /// Every command but Restore, fed strip-inset displays, keeps a fitting window off the strip.
+    static func testStageManagerSweep() {
+        let screens = [mainScreen, stripRightScreen]
+        let windows = [
+            CGRect(x: 100, y: 100, width: 600, height: 400),
+            CGRect(x: 1800, y: 0, width: 900, height: 700),
+            CGRect(x: 0, y: 0, width: 1, height: 1)
+        ]
+        var problems: [String] = []
+        for strip in [StageManagerStrip(edge: .left), StageManagerStrip(edge: .right, width: 240)] {
+            let inset = strip.inset(screens)
+            for command in WindowCommand.ID.allCases where command != .restore {
+                for window in windows {
+                    for gap: CGFloat in [0, 8] {
+                        for cycle in WindowCycle.allCases {
+                            let input = WindowPlacementEngine.Input(
+                                command: command, windowFrame: window, screens: inset, gap: gap,
+                                cycle: cycle)
+                            guard let placement = WindowPlacementEngine.placement(for: input),
+                                let host = inset.first(where: { $0.id == placement.screenID })
+                            else { continue }
+                            let clear = host.visibleFrame
+                            let rect = placement.frame
+                            if rect.minX < clear.minX || rect.maxX > clear.maxX {
+                                problems.append("\(command.rawValue) \(strip.edge) \(window): \(rect)")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        expect(problems.isEmpty, "no command covers the strip with a window that fits beside it")
+        for problem in problems.prefix(10) { print("      \(problem)") }
+    }
+
 }

@@ -456,6 +456,7 @@ run window-command-test    Quickcast/Features/WindowManagement/Model/WindowComma
                            Quickcast/Features/WindowManagement/Model/WindowCycle.swift \
                            Quickcast/Features/WindowManagement/Model/WindowPlacementEngine.swift \
                            Quickcast/Features/WindowManagement/Model/WindowActionMemory.swift \
+                           Quickcast/Features/WindowManagement/Model/StageManagerStrip.swift \
                            Quickcast/Platform/LocalizedResource.swift
 run window-preset-test     Quickcast/Features/WindowManagement/Model/WindowCommand.swift \
                            Quickcast/Features/WindowManagement/Model/WindowShortcutPreset.swift \

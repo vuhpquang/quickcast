@@ -185,7 +185,8 @@ final class WindowMover {
     @discardableResult
     func perform(
         _ command: WindowCommand.ID, target: WindowTarget?, gap: CGFloat, cycle: WindowCycle,
-        wrapsDisplays: Bool, keepsProportions: Bool
+        wrapsDisplays: Bool, keepsProportions: Bool,
+        stageStrip: StageManagerStrip? = nil  // Quickcast fork
     ) -> Bool {
         guard let catalogued = WindowCommandCatalog.command(id: command),
             let focused = focusedWindow(of: target)
@@ -202,11 +203,17 @@ final class WindowMover {
         return place(
             focused, command: command, gap: gap,
             reentersFullScreen: command == .nextDisplay || command == .previousDisplay,
+            stageStrip: stageStrip,
             cycleLength: {
                 WindowPlacementEngine.cycleLength(for: command, screens: $0, cycle: cycle)
             }
-        ) { current, screens, decision in
-            WindowPlacementEngine.placement(
+        ) { current, fullScreens, decision in
+            // Quickcast fork: Center measures true centre against the strip; the rest see it as edge.
+            if command == .center, let stageStrip {
+                return stageStrip.centerPlacement(for: current, screens: fullScreens, gap: gap)
+            }
+            let screens = stageStrip?.inset(fullScreens) ?? fullScreens
+            return WindowPlacementEngine.placement(
                 for: WindowPlacementEngine.Input(
                     command: command, windowFrame: current, screens: screens, gap: gap,
                     step: decision.step, cycle: cycle, originScreenID: decision.originScreenID,
@@ -218,13 +225,18 @@ final class WindowMover {
 
     /// Applies `size` to `target`'s focused window; Restore undoes it like any command.
     @discardableResult
-    func perform(_ size: CustomWindowSize, target: WindowTarget?, gap: CGFloat) -> Bool {
+    func perform(
+        _ size: CustomWindowSize, target: WindowTarget?, gap: CGFloat,
+        stageStrip: StageManagerStrip? = nil  // Quickcast fork
+    ) -> Bool {
         guard let focused = focusedWindow(of: target) else { return false }
         fullScreenTransitions.removeValue(forKey: focused.key)?.cancel()
         return place(
-            focused, command: nil, gap: gap, reentersFullScreen: false, cycleLength: { _ in 1 },
+            focused, command: nil, gap: gap, reentersFullScreen: false, stageStrip: stageStrip,
+            cycleLength: { _ in 1 },
             resolve: { current, screens, _ in
-                size.placement(for: current, screens: screens, gap: gap)
+                size.placement(
+                    for: current, screens: stageStrip?.inset(screens) ?? screens, gap: gap)
             })
     }
 
@@ -255,7 +267,7 @@ final class WindowMover {
     /// The one decide → resolve → write → commit sequence every geometry press runs through.
     private func place(
         _ focused: FocusedWindow, command: WindowCommand.ID?, gap: CGFloat,
-        reentersFullScreen: Bool,
+        reentersFullScreen: Bool, stageStrip: StageManagerStrip?,
         cycleLength: ([WindowPlacementEngine.Screen]) -> Int, resolve: @escaping Resolver
     ) -> Bool {
         let surface = focused.surface
@@ -283,7 +295,7 @@ final class WindowMover {
         guard isFullScreen else {
             return apply(
                 focused, command: command, gap: gap, decision: decision, snapshot: snapshot,
-                now: now, endsFullScreen: false, resolve: resolve)
+                now: now, endsFullScreen: false, stageStrip: stageStrip, resolve: resolve)
         }
 
         // Resolved first, so a command with nowhere to go never takes the window out of fullscreen.
@@ -292,14 +304,15 @@ final class WindowMover {
             guard let settled = Snapshot(of: surface) else { return }
             _ = self.apply(
                 focused, command: command, gap: gap, decision: decision, snapshot: settled,
-                now: now, endsFullScreen: reentersFullScreen, resolve: resolve)
+                now: now, endsFullScreen: reentersFullScreen, stageStrip: stageStrip,
+                resolve: resolve)
         }
     }
 
     private func apply(
         _ focused: FocusedWindow, command: WindowCommand.ID?, gap: CGFloat,
         decision: WindowActionMemory<WindowKey>.Decision, snapshot: Snapshot, now: Date,
-        endsFullScreen: Bool, resolve: Resolver
+        endsFullScreen: Bool, stageStrip: StageManagerStrip?, resolve: Resolver
     ) -> Bool {
         let surface = focused.surface
         let current = snapshot.frame
@@ -310,7 +323,8 @@ final class WindowMover {
         guard surface.canMove else { return false }
         let canResize = placement.resizes && surface.canResize
 
-        let destination = screens.first { $0.id == placement.screenID }
+        // Quickcast fork: a refused shrink re-seats inside the strip-free box too.
+        let destination = (stageStrip?.inset(screens) ?? screens).first { $0.id == placement.screenID }
         let canvas = destination.map {
             WindowPlacementEngine.canvas(
                 $0.visibleFrame,

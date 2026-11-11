@@ -3,7 +3,7 @@ import AppKit
 /// The one funnel from a palette row or a global hotkey to the mover.
 @MainActor
 final class WindowCommandCoordinator {
-    // Quickcast fork: internal, for the Move Window extension.
+    // Quickcast fork: internal, for the Move Window and Stage Manager extensions.
     let settings: AppSettings
     let paletteCoordinator: PaletteCoordinator
     private let windowMover: WindowMover
@@ -33,7 +33,7 @@ final class WindowCommandCoordinator {
         windowMover.perform(
             id, target: handOffTarget(), gap: CGFloat(settings.windowGap),
             cycle: settings.windowCycle, wrapsDisplays: settings.windowWrapsDisplays,
-            keepsProportions: settings.windowKeepsProportions)
+            keepsProportions: settings.windowKeepsProportions, stageStrip: stageStrip())
     }
 
     /// The same funnel for a custom size, so the feature switch gates it identically.
@@ -44,7 +44,8 @@ final class WindowCommandCoordinator {
 
     func runWindowSize(_ size: CustomWindowSize) {
         guard settings.windowManagementEnabled else { return }
-        windowMover.perform(size, target: handOffTarget(), gap: CGFloat(settings.windowGap))
+        windowMover.perform(
+            size, target: handOffTarget(), gap: CGFloat(settings.windowGap), stageStrip: stageStrip())
     }
 
     /// The window to place, read before the palette hides and hands focus back to it.
