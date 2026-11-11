@@ -316,7 +316,8 @@ final class WindowMover {
                 $0.visibleFrame,
                 gap: WindowPlacementEngine.sanitizedGap(gap, in: $0.visibleFrame))
         }
-        let restoreEnhancedUI = canResize ? surface.suppressEnhancedUserInterface() : {}
+        // Quickcast fork: moves too, since an app with it on animates and drifts a bare move.
+        let restoreEnhancedUI = surface.suppressEnhancedUserInterface()
         defer { restoreEnhancedUI() }
 
         guard

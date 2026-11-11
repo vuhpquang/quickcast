@@ -108,6 +108,8 @@ struct WindowLayoutTests {
         customSizeDimensions()
         customSizeFrames()
         customSizePlacement()
+        customSizeMoves()
+        customSizeMoveParsing()
         customSizeStore()
         customSizePersistence()
 
@@ -908,6 +910,142 @@ struct WindowLayoutTests {
         expect(
             customSize().placement(for: window, screens: [], gap: 0) == nil,
             "no displays means nowhere to go")
+    }
+
+    static func customSizeMoves() {
+        typealias Dimension = CustomWindowSize.Dimension
+        typealias Offset = CustomWindowSize.Offset
+        let visible = mainScreen.visibleFrame
+        let current = CGSize(width: 600, height: 400)
+        let keep = customSize(width: .init(1, .current), height: .init(1, .current), anchor: .topLeft)
+        expect(keep.movesOnly, "two current lengths only move")
+        expect(
+            !customSize(width: .init(1, .current)).movesOnly, "one current length still resizes")
+        expect(Dimension(0, .current).value == 1, "a current length keeps a valid number")
+        expect(
+            Dimension(1, .current).length(in: 1000, current: 640) == 640,
+            "a current length is the window's own")
+        expect(
+            Dimension(1, .current).length(in: 500, current: 640) == 500,
+            "a current length is capped when the other axis resizes")
+        expect(
+            Dimension(1, .current).length(in: 900) == 900,
+            "with no window to measure, current reads as the box")
+        expect(
+            Dimension(720, .points).converted(to: .current, in: 1440) == Dimension(720, .current)
+                && Dimension(720, .current).converted(to: .percent, in: 1440)
+                    == Dimension(100, .percent),
+            "switching to and from current keeps the number rather than converting it")
+        expect(Dimension(1, .current).label == "Current", "a current length is named, not numbered")
+
+        expectRect(
+            keep.frame(in: visible, gap: 0, current: current),
+            CGRect(x: 0, y: 0, width: 600, height: 400), "a move keeps the window's size")
+        expectRect(
+            customSize(
+                width: .init(1, .current), height: .init(1, .current), anchor: .topLeft,
+                offset: .init(x: 120, y: 80)
+            ).frame(in: visible, gap: 0, current: current),
+            CGRect(x: 120, y: 80, width: 600, height: 400), "an exact position from the top left")
+        expectRect(
+            customSize(
+                width: .init(1, .current), height: .init(1, .current), anchor: .bottomRight,
+                offset: .init(x: -20, y: -20)
+            ).frame(in: visible, gap: 0, current: current),
+            CGRect(x: 820, y: 480, width: 600, height: 400),
+            "a position relative to the bottom right corner, +Y down")
+        expectRect(
+            customSize(
+                width: .init(1, .current), height: .init(1, .current), anchor: .topLeft,
+                offset: .init(x: 50, y: 25, xUnit: .percent, yUnit: .percent)
+            ).frame(in: visible, gap: 10, current: current),
+            CGRect(x: 720, y: 230, width: 600, height: 400),
+            "a percent position is a share of the gap-inset box")
+        expectRect(
+            customSize(
+                width: .init(1, .current), height: .init(1, .current), anchor: .topLeft,
+                offset: .init(x: 4000, y: 4000)
+            ).frame(in: visible, gap: 0, current: current),
+            CGRect(x: 840, y: 500, width: 600, height: 400),
+            "a position past the far edge is clamped back onto the display")
+        expectRect(
+            customSize(
+                width: .init(1, .current), height: .init(1, .current), anchor: .center,
+                offset: .init(x: 100, y: 0)
+            ).frame(in: visible, gap: 0, current: CGSize(width: 2000, height: 1200)),
+            CGRect(x: 0, y: 0, width: 2000, height: 1200),
+            "a window larger than the display is moved, never shrunk, its leading edge pinned")
+        expectRect(
+            customSize(width: .init(1, .current), height: .init(50, .percent), anchor: .top)
+                .frame(in: visible, gap: 0, current: current),
+            CGRect(x: 420, y: 0, width: 600, height: 450),
+            "a current width with a set height resizes only the height")
+
+        let window = CGRect(x: 2000, y: 100, width: 400, height: 300)
+        let move = customSize(
+            width: .init(1, .current), height: .init(1, .current), anchor: .topLeft,
+            offset: .init(x: 10, y: 10))
+        let placement = move.placement(for: window, screens: [mainScreen, rightScreen], gap: 0)
+        expect(placement?.resizes == false, "a move asks the mover never to write a size")
+        expect(placement?.screenID == rightScreen.id, "a move stays on the window's display")
+        expectRect(
+            placement?.frame, CGRect(x: 1450, y: -265, width: 400, height: 300),
+            "a move is relative to its own display's visible frame, across a negative origin")
+        expectRect(
+            move.placement(
+                for: CGRect(x: -1500, y: 0, width: 400, height: 300),
+                screens: [mainScreen, rightScreen, leftScreen], gap: 0)?.frame,
+            CGRect(x: -1910, y: -65, width: 400, height: 300),
+            "a move on a display left of the primary uses that display's own origin")
+        for anchor in WindowLayoutAnchor.allCases {
+            for gap: CGFloat in [0, 8, .nan] {
+                let frame = customSize(
+                    width: .init(1, .current), height: .init(1, .current), anchor: anchor,
+                    offset: .init(x: -4000, y: 4000)
+                ).frame(in: visible, gap: gap, current: current)
+                expect(
+                    frame.map { visible.contains($0) && $0.size == current } == true,
+                    "\(anchor.rawValue) at gap \(gap) moves onto the display at its own size")
+            }
+        }
+
+        expect(Offset(x: 150, y: -150, xUnit: .percent, yUnit: .percent) == Offset(
+            x: 100, y: -100, xUnit: .percent, yUnit: .percent), "a percent offset clamps to ±100")
+        expect(
+            customSize(offset: .init(x: 10, y: -5, xUnit: .percent)).summary
+                == "1200 pt × 800 pt · Center · Offset 10%, -5 pt",
+            "a percent offset is labelled per axis")
+        let mixed = customSize(
+            width: .init(1, .current), height: .init(1, .current),
+            offset: .init(x: 10, y: 20, xUnit: .percent))
+        guard let data = try? JSONEncoder().encode(mixed),
+            let decoded = try? JSONDecoder().decode(CustomWindowSize.self, from: data)
+        else { return expect(false, "a move encodes and decodes") }
+        expect(decoded == mixed, "current lengths and offset units survive a Codable round trip")
+        let legacy = Data(#"{"x":12,"y":-3}"#.utf8)
+        expect(
+            (try? JSONDecoder().decode(Offset.self, from: legacy)) == Offset(x: 12, y: -3),
+            "an offset stored before units reads as points")
+    }
+
+    static func customSizeMoveParsing() {
+        let move = CustomWindowSize.move(x: "120", y: " 10% ")
+        expect(move?.movesOnly == true, "Move Window keeps the size")
+        expect(move?.anchor == .topLeft, "Move Window measures from the top left by default")
+        expect(
+            move?.offset == .init(x: 120, y: 10, xUnit: .points, yUnit: .percent),
+            "a bare number is points and a % a share, per axis")
+        expect(
+            CustomWindowSize.move(x: "40pt", y: "-8", anchor: "bottom-right")?.anchor == .bottomRight
+                && CustomWindowSize.move(x: "40pt", y: "-8")?.offset == .init(x: 40, y: -8),
+            "pt is accepted and a corner can be named")
+        for (x, y) in [("", "1"), ("1", "abc"), ("5000", "0"), ("0", "101%"), ("1.5", "2")] {
+            expect(CustomWindowSize.move(x: x, y: y) == nil, "x=\(x) y=\(y) is refused, not clamped")
+        }
+        expect(CustomWindowSize.move(x: nil, y: "1") == nil, "a missing coordinate is refused")
+        expect(
+            CustomWindowSize.move(x: "1", y: "1", anchor: "middle") == nil,
+            "an unknown corner is refused")
     }
 
     static func withCustomSizeStore(_ body: (UserDefaults) -> Void) {

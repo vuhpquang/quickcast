@@ -3097,6 +3097,64 @@
         }
       }
     },
+    "%@ · Offset %@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · Offset %2$@, %3$@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · Versatz %2$@, %3$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · Desplazamiento %2$@, %3$@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · Décalage %2$@, %3$@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · オフセット %2$@, %3$@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · 오프셋 %2$@, %3$@"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · Deslocamento %2$@, %3$@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · смещение %2$@, %3$@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · 偏移 %2$@, %3$@"
+          }
+        }
+      }
+    },
     "%@ · Offset %lld, %lld pt" : {
       "localizations" : {
         "de" : {
@@ -105532,58 +105590,6 @@
         }
       }
     },
-    "Resizes the window you were last in, on the display it is already on." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ändert die Größe des zuletzt verwendeten Fensters auf dem Display, auf dem es sich bereits befindet."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Redimensiona la última ventana que usaste en la pantalla donde ya está."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Redimensionne la dernière fenêtre utilisée sans changer d’écran."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最後に使用していたウインドウを、現在あるディスプレイ上でサイズ変更します。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "마지막으로 사용한 윈도우의 크기를 해당 윈도우가 있는 디스플레이에서 조절합니다."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Redimensiona a última janela em que você esteve, na tela em que ela já está."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Изменяет размер окна, в котором вы работали последним, на том дисплее, где оно уже находится."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在窗口当前所在的显示器上，调整你上次使用的窗口的大小。"
-          }
-        }
-      }
-    },
     "Resolve the API key or endpoint error before saving." : {
       "localizations" : {
         "de" : {
@@ -116778,6 +116784,58 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "大小"
+          }
+        }
+      }
+    },
+    "Sizes or moves the window you were last in, on the display it is already on." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ändert die Größe oder Position des zuletzt verwendeten Fensters auf dem Display, auf dem es sich bereits befindet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redimensiona o mueve la última ventana que usaste en la pantalla donde ya está."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redimensionne ou déplace la dernière fenêtre utilisée sans changer d’écran."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最後に使用していたウインドウを、現在あるディスプレイ上でサイズ変更または移動します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마지막으로 사용한 윈도우의 크기를 조절하거나 해당 윈도우가 있는 디스플레이에서 이동합니다."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redimensiona ou move a última janela em que você esteve, na tela em que ela já está."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменяет размер или положение окна, в котором вы работали последним, на том дисплее, где оно уже находится."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在窗口当前所在的显示器上，调整你上次使用的窗口的大小或位置。"
           }
         }
       }
@@ -144897,6 +144955,65 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "居中"
+          }
+        }
+      }
+    },
+    "window-size-unit-current" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktuell"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actual"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actuelle"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atual"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Текущий"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前"
           }
         }
       }

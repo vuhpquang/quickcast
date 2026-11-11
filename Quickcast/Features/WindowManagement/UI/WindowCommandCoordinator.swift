@@ -3,8 +3,9 @@ import AppKit
 /// The one funnel from a palette row or a global hotkey to the mover.
 @MainActor
 final class WindowCommandCoordinator {
-    private let settings: AppSettings
-    private let paletteCoordinator: PaletteCoordinator
+    // Quickcast fork: internal, for the Move Window extension.
+    let settings: AppSettings
+    let paletteCoordinator: PaletteCoordinator
     private let windowMover: WindowMover
     private let spaceSwitcher: SpaceSwitcher
     private let customSizes: CustomWindowSizeStore
@@ -20,8 +21,9 @@ final class WindowCommandCoordinator {
         self.customSizes = customSizes
     }
 
-    func runWindowCommand(id: WindowCommand.ID) {
+    func runWindowCommand(id: WindowCommand.ID, values: [String: String] = [:]) {
         guard settings.windowManagementEnabled else { return }
+        if id == .moveWindow { return runMoveWindow(values: values) }  // Quickcast fork
         if let direction = SpaceDirection(id) {
             // Restoring focus reactivates an app elsewhere, pulling its Space forward.
             if paletteCoordinator.isVisible { paletteCoordinator.hidePalette(restoreFocus: false) }

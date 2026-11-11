@@ -127,7 +127,6 @@ launchers. We accept that to keep the app simple.
 Quickcast is an all-in-one launcher, not a full window manager. Its window tools are finished.
 
 - **Custom snap cycles (like Loop), edge-anchored sizes, or step-by-step undo.** ([#1223](https://github.com/vuhpquang/quickcast/issues/1223), [#1630](https://github.com/vuhpquang/quickcast/issues/1630))
-- **Move a window without resizing it.** It caused odd side effects. ([#1511](https://github.com/vuhpquang/quickcast/issues/1511))
 - **Drag a window to a screen edge to snap it.** ([#984](https://github.com/vuhpquang/quickcast/issues/984))
 - **macOS Fill & Arrange layouts.** ([#652](https://github.com/vuhpquang/quickcast/issues/652))
 - **Layouts per workspace (like FlashSpace).** ([#639](https://github.com/vuhpquang/quickcast/issues/639))

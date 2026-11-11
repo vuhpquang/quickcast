@@ -73,7 +73,7 @@ enum WindowManagementFileFormat {
             "width": .string(spelled(size.width)),
             "height": .string(spelled(size.height)),
             "position": .string(size.anchor.rawValue),
-            "offset": offset(x: Double(size.offset.x), y: Double(size.offset.y)),
+            "offset": offset(size.offset),
             "shortcut": text(shortcut),
             "alias": text(alias)
         ])
@@ -98,14 +98,11 @@ enum WindowManagementFileFormat {
                 continue
             }
             let id = identity(of: item, kind: "custom-size", name: name, label: label, into: &decoded)
-            let offset = point(item["offset"], label: label, into: &decoded)
             decoded.records.append(
                 CustomWindowSize(
                     id: id, name: name, width: width, height: height,
                     anchor: anchor(item["position"], label: label, into: &decoded),
-                    offset: CustomWindowSize.Offset(
-                        x: Int(exactly: offset.x.rounded()) ?? 0,
-                        y: Int(exactly: offset.y.rounded()) ?? 0)))
+                    offset: sizeOffset(item["offset"], label: label, into: &decoded)))
             texts(of: item, id: id, label: label, into: &decoded)
         }
         return decoded
@@ -287,7 +284,35 @@ enum WindowManagementFileFormat {
     }
 
     private static func spelled(_ dimension: CustomWindowSize.Dimension) -> String {
-        "\(dimension.value)\(dimension.unit.suffix)"
+        // Quickcast fork: `current` has no number worth writing.
+        if dimension.unit == .current { return dimension.unit.rawValue }
+        return "\(dimension.value)\(dimension.unit.suffix)"
+    }
+
+    /// Quickcast fork: points stay plain numbers, so a file without percentages reads as before.
+    private static func offset(_ offset: CustomWindowSize.Offset) -> SettingsFileJSON {
+        func axis(_ value: Int, _ unit: CustomWindowSize.Offset.Unit) -> SettingsFileJSON {
+            unit == .points ? .number(Double(value)) : .string("\(value)\(unit.suffix)")
+        }
+        return .object(["x": axis(offset.x, offset.xUnit), "y": axis(offset.y, offset.yUnit)])
+    }
+
+    /// Quickcast fork: each axis a number of points, or `"10%"` / `"40pt"`.
+    private static func sizeOffset<Record>(
+        _ json: SettingsFileJSON?, label: String, into decoded: inout Decoded<Record>
+    ) -> CustomWindowSize.Offset {
+        typealias Unit = CustomWindowSize.Offset.Unit
+        func axis(_ value: SettingsFileJSON?) -> (value: Int, unit: Unit)? {
+            if let number = value?.number { return Int(exactly: number.rounded()).map { ($0, .points) } }
+            return value?.string.flatMap(Unit.coordinate(typed:))
+        }
+        guard let json else { return .zero }
+        guard let x = axis(json["x"]), let y = axis(json["y"]) else {
+            decoded.problems.append(
+                String(localized: "\(label): “offset” needs numbers for “x” and “y”"))
+            return .zero
+        }
+        return CustomWindowSize.Offset(x: x.value, y: y.value, xUnit: x.unit, yUnit: y.unit)
     }
 
     /// `"60%"` or `"900pt"`; a bare number reads as points, the unit a person means by one.
@@ -298,7 +323,9 @@ enum WindowManagementFileFormat {
         guard let spelled = json?.string?.trimmingCharacters(in: .whitespaces).lowercased() else {
             return nil
         }
-        for unit in CustomWindowSize.Dimension.Unit.allCases where spelled.hasSuffix(unit.suffix) {
+        if spelled == CustomWindowSize.Dimension.Unit.current.rawValue { return .init(1, .current) }
+        for unit in CustomWindowSize.Dimension.Unit.allCases
+        where unit != .current && spelled.hasSuffix(unit.suffix) {
             let number = spelled.dropLast(unit.suffix.count).trimmingCharacters(in: .whitespaces)
             return Double(number).flatMap { Int(exactly: $0.rounded()) }.map { .init($0, unit) }
         }

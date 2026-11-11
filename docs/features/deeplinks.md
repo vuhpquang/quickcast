@@ -118,6 +118,7 @@ ignored, because each built-in already knows whether it shows a screen.
 | `custom-command/<uuid>`      | `arguments` as `["a", "b"]`, or by argument name; `fallbackText` is `$1`                     |
 | `system-action/set-volume`   | `arguments` `{volume}`, `["50"]` or `fallbackText`: `0`–`100`, `%` allowed; skips the picker |
 | `window-size`                | `arguments` `{width, height, anchor, x, y}`: `1200` is points, `60%` a share of the screen   |
+| `window-command/move-window` | `arguments` `{x, y, anchor}` or `["x", "y"]`; anything missing or invalid opens its fields   |
 
 The search screens are `clipboard-history`, `search-emoji`, `calculator-history`,
 `search-quicklinks`, `search-files`, `define`, `search-snippets`, `search-custom-commands`,
@@ -129,7 +130,11 @@ row's fields, as a hotkey with no selection does. Any other target ignores its i
 - A volume outside `0`–`100`, or a note named `.` or `..`, refuses the link before anything asks.
 - `openWith` is kept only when it names an installed app's bundle ID.
 - A window size refuses, rather than clamps, a value outside what a saved size allows. `anchor` is a
-  `WindowLayoutAnchor` raw value (`top-left`, `center`, …) and `x`/`y` shift it in points.
+  `WindowLayoutAnchor` raw value (`top-left`, `center`, …) and `x`/`y` shift it in points, or by a
+  share of the screen with `%`. A `width` or `height` of `current` keeps the window's own length, so
+  `current` on both only moves the window.
+- Move Window is the same move with the size kept and `top-left` the default corner. Copy Deeplink on
+  its row carries the typed X and Y.
 - Create Snippet with no input — from a link, a hotkey or the launcher — starts from the text
   selected in the app in front, read through Accessibility (`AccessibilityText.selection(in:)`),
   never by sending ⌘C.

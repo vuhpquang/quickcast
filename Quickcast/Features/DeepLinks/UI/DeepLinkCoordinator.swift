@@ -268,9 +268,25 @@ final class DeepLinkCoordinator {
             return runCustomCommand(id: id, with: input)
         case .systemAction(.setVolume):
             return setVolume(with: input)
+        case .windowCommand(id: .moveWindow):
+            return moveWindow(with: input)  // Quickcast fork
         default:
             return false
         }
+    }
+
+    /// Quickcast fork: `{x, y, anchor}` or `["x", "y"]`; anything short opens the fields.
+    private func moveWindow(with input: DeepLinkInput) -> Bool {
+        typealias Field = CustomWindowSize.MoveField
+        let values: [String: String]
+        switch input.arguments {
+        case .named(let fields)?: values = fields
+        case .positional(let list)?:
+            values = Dictionary(uniqueKeysWithValues: zip([Field.x, Field.y], list))
+        case nil: return false
+        }
+        core.windowCommandCoordinator.runMoveWindow(values: values)
+        return true
     }
 
     private func runCommand(_ id: CommandID, with input: DeepLinkInput) -> Bool {

@@ -118,7 +118,7 @@ struct WindowCommandTests {
 
     static func testCatalog() {
         let commands = WindowCommandCatalog.all
-        expect(commands.count == 39, "catalog contains all 39 agreed commands")
+        expect(commands.count == 40, "catalog contains all 40 agreed commands")
         expect(commands.map(\.id) == WindowCommand.ID.allCases, "catalog covers every ID once")
         expect(
             Set(commands.map { $0.name.lowercased() }).count == commands.count, "names are unique")
@@ -151,9 +151,9 @@ struct WindowCommandTests {
         expect(
             moveOnly == [
                 .moveLeft, .moveRight, .moveUp, .moveDown,
-                .moveToLeftEdge, .moveToRightEdge, .moveToTopEdge, .moveToBottomEdge
+                .moveToLeftEdge, .moveToRightEdge, .moveToTopEdge, .moveToBottomEdge, .moveWindow
             ],
-            "only the nudges and edge moves leave the size alone")
+            "only the nudges, edge moves and Move Window leave the size alone")
         expect(
             Set(commands.filter { $0.kind == .fullscreen }.map(\.id)) == [.toggleFullscreen],
             "only Toggle Fullscreen is a fullscreen command")
@@ -184,7 +184,7 @@ struct WindowCommandTests {
         expect(grouped.first { $0.group == .fourths }?.commands.count == 2, "two fourths")
         expect(grouped.first { $0.group == .thirds }?.commands.count == 5, "five thirds")
         expect(grouped.first { $0.group == .sizing }?.commands.count == 11, "eleven sizing commands")
-        expect(grouped.first { $0.group == .moving }?.commands.count == 10, "ten moving commands")
+        expect(grouped.first { $0.group == .moving }?.commands.count == 11, "eleven moving commands")
         expect(grouped.first { $0.group == .spaces }?.commands.count == 2, "two space commands")
 
         expect(
@@ -198,6 +198,8 @@ struct WindowCommandTests {
 
         // Fullscreen has no geometry: the mover branches before asking for a placement.
         expect(frame(.toggleFullscreen) == nil, "Toggle Fullscreen produces no placement")
+        // Its position is typed, so it resolves through a custom size and never the engine.
+        expect(frame(.moveWindow) == nil, "Move Window produces no placement of its own")
     }
 
     // MARK: - Convention lock

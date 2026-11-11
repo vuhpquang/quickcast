@@ -48,8 +48,8 @@ real Raycast extensions**, rendered as native SwiftUI. Free, open source, and st
 - **Snippets** — reusable Markdown templates with dynamic placeholders, arguments, nested references
   and optional keyword expansion.
 - **Custom commands** — run named shell commands through fuzzy search or their own global hotkeys.
-- **Window management** — 39 Rectangle-style actions: halves, quarters, thirds, sizing, nudging,
-  edge moves, display moves, fullscreen and Spaces.
+- **Window management** — 40 Rectangle-style actions: halves, quarters, thirds, sizing, nudging,
+  edge moves, exact positions, display moves, fullscreen and Spaces.
 - **System actions** — lock, sleep, restart, empty trash, toggle appearance, Bluetooth, mute, hidden
   files, and more.
 - **Calendar and meetings** — your next meeting on the empty palette and in the menu bar, one key to

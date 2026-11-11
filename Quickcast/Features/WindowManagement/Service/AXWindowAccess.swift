@@ -128,10 +128,9 @@ enum AXWindowAccess {
         guard canResize else {
             var slot = anchor.place(current.size, in: target)
             if let canvas { slot = WindowPlacementEngine.clamped(slot, into: canvas) }
-            guard setPosition(WindowPlacementEngine.rounded(slot).origin, on: window) else {
-                return nil
-            }
-            return frame(of: window) ?? current
+            let origin = WindowPlacementEngine.rounded(slot).origin
+            guard setPosition(origin, on: window) else { return nil }
+            return keepingSize(current.size, at: origin, of: window) ?? current
         }
 
         // size → position → size. See docs/features/window-management.md#applying-a-placement.
@@ -162,6 +161,21 @@ enum AXWindowAccess {
             actual = frame(of: window) ?? actual
         }
         return actual
+    }
+
+    /// Quickcast fork: a move the app or display answered with a resize is undone, once.
+    private static func keepingSize(
+        _ size: CGSize, at origin: CGPoint, of window: AXUIElement
+    ) -> CGRect? {
+        guard let actual = frame(of: window) else { return nil }
+        guard
+            abs(actual.width - size.width) > clampTolerance
+                || abs(actual.height - size.height) > clampTolerance,
+            isSettable(kAXSizeAttribute, on: window)
+        else { return actual }
+        _ = setSize(size, on: window)
+        _ = setPosition(origin, on: window)
+        return frame(of: window) ?? actual
     }
 
     /// Cleared for the writes, never while VoiceOver runs. See docs/features/window-management.md.

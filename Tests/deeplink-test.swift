@@ -332,6 +332,20 @@ struct DeepLinkTests {
         }
         expect(CustomWindowSize(linkFields: ["width": "800"]) == nil, "a size needs both sides")
         expect(parse("quickcast://window-size") == nil, "a window-size link with no size is refused")
+
+        let move = CustomWindowSize(
+            linkFields: ["width": "current", "height": "Current", "x": "25%", "y": "40"])
+        expect(move?.movesOnly == true, "current keeps the window's lengths, so the link only moves")
+        expect(
+            move?.offset == .init(x: 25, y: 40, xUnit: .percent),
+            "an offset can be a share of the screen")
+        expect(
+            CustomWindowSize(linkFields: ["width": "800", "height": "600", "x": "101%"]) == nil,
+            "a percent offset past 100 is refused")
+        guard case .entry(.windowCommand(id: .moveWindow), let input)? = parse(
+            "quickcast://window-command/move-window?arguments=%7B%22x%22%3A%2210%22%7D")
+        else { return expect(false, "a Move Window link parses as the command") }
+        expect(input.arguments == .named(["x": "10"]), "and carries its typed position")
     }
 
     static func consentKeyChecks() {

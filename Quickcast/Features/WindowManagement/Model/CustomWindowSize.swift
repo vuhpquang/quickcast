@@ -9,11 +9,13 @@ struct CustomWindowSize: Codable, Hashable, Identifiable, Sendable {
         enum Unit: String, Codable, CaseIterable, Sendable {
             case points
             case percent
+            /// Quickcast fork: keeps the window's own length on this axis, so a size can only move.
+            case current
 
-            /// Wider than any display for points, so a real size is never clipped at authoring.
+            /// Wider than any display for points; `current` keeps its number for switching back.
             var range: ClosedRange<Int> {
                 switch self {
-                case .points: return 1...16_000
+                case .points, .current: return 1...16_000
                 case .percent: return 1...100
                 }
             }
@@ -22,6 +24,16 @@ struct CustomWindowSize: Codable, Hashable, Identifiable, Sendable {
                 switch self {
                 case .points: return "pt"
                 case .percent: return "%"
+                case .current: return ""
+                }
+            }
+
+            /// What the editor's unit picker shows.
+            var title: String {
+                switch self {
+                case .points: return "pt"
+                case .percent: return "%"
+                case .current: return String(localized: "window-size-unit-current", defaultValue: "Current")
                 }
             }
         }
@@ -35,35 +47,93 @@ struct CustomWindowSize: Codable, Hashable, Identifiable, Sendable {
         }
 
         var label: String {
-            unit == .points ? "\(value) pt" : "\(value)%"
+            switch unit {
+            case .points: return "\(value) pt"
+            case .percent: return "\(value)%"
+            case .current: return unit.title
+            }
         }
 
         /// The length this asks for inside `available`, never zero and never past it.
-        func length(in available: CGFloat) -> CGFloat {
-            let requested =
-                unit == .points ? CGFloat(value) : available * CGFloat(value) / 100
+        func length(in available: CGFloat, current: CGFloat? = nil) -> CGFloat {
+            let requested: CGFloat
+            switch unit {
+            case .points: requested = CGFloat(value)
+            case .percent: requested = available * CGFloat(value) / 100
+            // No window to measure (an editor preview) reads as the whole box.
+            case .current: requested = current ?? available
+            }
             return min(available, max(WindowLayoutGeometry.minimumLength, requested))
         }
 
         func converted(to unit: Unit, in available: CGFloat) -> Dimension {
-            guard unit != self.unit, available > 0 else { return Dimension(value, unit) }
+            // `current` carries no length of its own, so the number rides through unchanged.
+            guard unit != self.unit, available > 0, unit != .current, self.unit != .current else {
+                return Dimension(value, unit)
+            }
             let points = unit == .percent ? CGFloat(value) : CGFloat(value) * available / 100
             let converted = unit == .percent ? points / available * 100 : points
             return Dimension(Int(converted.rounded()), unit)
         }
     }
 
-    /// Points, applied on top of the anchor; +Y is down, as everywhere in AX space.
+    /// Applied on top of the anchor; +Y is down, as everywhere in AX space.
     struct Offset: Codable, Hashable, Sendable {
-        static let range: ClosedRange<Int> = -4000...4000
+        /// Quickcast fork: an axis can be a share of the box, so one position suits every display.
+        enum Unit: String, Codable, CaseIterable, Sendable {
+            case points
+            case percent
+
+            var range: ClosedRange<Int> {
+                switch self {
+                case .points: return -4000...4000
+                case .percent: return -100...100
+                }
+            }
+
+            var suffix: String { self == .points ? "pt" : "%" }
+        }
+
+        static let range: ClosedRange<Int> = Unit.points.range
         static let zero = Offset(x: 0, y: 0)
 
         var x: Int
         var y: Int
+        var xUnit: Unit
+        var yUnit: Unit
 
-        init(x: Int, y: Int) {
-            self.x = x.clamped(to: Self.range)
-            self.y = y.clamped(to: Self.range)
+        init(x: Int, y: Int, xUnit: Unit = .points, yUnit: Unit = .points) {
+            self.x = x.clamped(to: xUnit.range)
+            self.y = y.clamped(to: yUnit.range)
+            self.xUnit = xUnit
+            self.yUnit = yUnit
+        }
+
+        private enum CodingKeys: String, CodingKey { case x, y, xUnit, yUnit }
+
+        // Units default to points, so an offset stored before they existed reads unchanged.
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.init(
+                x: try container.decode(Int.self, forKey: .x),
+                y: try container.decode(Int.self, forKey: .y),
+                xUnit: try container.decodeIfPresent(Unit.self, forKey: .xUnit) ?? .points,
+                yUnit: try container.decodeIfPresent(Unit.self, forKey: .yUnit) ?? .points)
+        }
+
+        var isPoints: Bool { xUnit == .points && yUnit == .points }
+
+        /// The shift in points inside a box of `size`.
+        func distance(in size: CGSize) -> CGVector {
+            func resolve(_ value: Int, _ unit: Unit, _ length: CGFloat) -> CGFloat {
+                unit == .points ? CGFloat(value) : length * CGFloat(value) / 100
+            }
+            return CGVector(
+                dx: resolve(x, xUnit, size.width), dy: resolve(y, yUnit, size.height))
+        }
+
+        static func label(_ value: Int, _ unit: Unit) -> String {
+            unit == .points ? "\(value) pt" : "\(value)%"
         }
     }
 
@@ -106,8 +176,17 @@ struct CustomWindowSize: Codable, Hashable, Identifiable, Sendable {
 
     var summary: String {
         let base = "\(width.label) × \(height.label) · \(anchor.title)"
-        return offset == .zero ? base : String(localized: "\(base) · Offset \(offset.x), \(offset.y) pt")
+        guard offset.x != 0 || offset.y != 0 else { return base }
+        guard offset.isPoints else {
+            let x = Offset.label(offset.x, offset.xUnit)
+            let y = Offset.label(offset.y, offset.yUnit)
+            return String(localized: "\(base) · Offset \(x), \(y)")
+        }
+        return String(localized: "\(base) · Offset \(offset.x), \(offset.y) pt")
     }
+
+    /// Quickcast fork: both axes keep the window's own length, so this only moves it.
+    var movesOnly: Bool { width.unit == .current && height.unit == .current }
 
     static func id(fromEntryID entryID: String) -> UUID? {
         guard entryID.hasPrefix(entryIDPrefix) else { return nil }
@@ -126,22 +205,25 @@ struct CustomWindowSize: Codable, Hashable, Identifiable, Sendable {
         cleaned.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
         cleaned.width = Dimension(width.value, width.unit)
         cleaned.height = Dimension(height.value, height.unit)
-        cleaned.offset = Offset(x: offset.x, y: offset.y)
+        cleaned.offset = Offset(x: offset.x, y: offset.y, xUnit: offset.xUnit, yUnit: offset.yUnit)
         return cleaned
     }
 
     // MARK: - Geometry
 
     /// The frame this size asks for on a display, in AX space; nil when the display has no room.
-    func frame(in visibleFrame: CGRect, gap: CGFloat) -> CGRect? {
+    func frame(in visibleFrame: CGRect, gap: CGFloat, current: CGSize? = nil) -> CGRect? {
         let canvas = WindowPlacementEngine.canvas(
             visibleFrame, gap: WindowPlacementEngine.sanitizedGap(gap, in: visibleFrame))
         guard canvas.width > 0, canvas.height > 0 else { return nil }
-        let size = CGSize(
-            width: width.length(in: canvas.width), height: height.length(in: canvas.height))
+        var size = CGSize(
+            width: width.length(in: canvas.width, current: current?.width),
+            height: height.length(in: canvas.height, current: current?.height))
+        // A pure move never resizes, not even to fit; the clamp pins an oversized leading edge.
+        if movesOnly, let current, current.width >= 1, current.height >= 1 { size = current }
         // Offset before the clamp: the nudge is the user's intent, the clamp only a safety net.
-        let placed = anchor.placement.place(size, in: canvas)
-            .offsetBy(dx: CGFloat(offset.x), dy: CGFloat(offset.y))
+        let shift = offset.distance(in: canvas.size)
+        let placed = anchor.placement.place(size, in: canvas).offsetBy(dx: shift.dx, dy: shift.dy)
         return WindowPlacementEngine.rounded(WindowPlacementEngine.clamped(placed, into: canvas))
     }
 
@@ -150,10 +232,10 @@ struct CustomWindowSize: Codable, Hashable, Identifiable, Sendable {
         for windowFrame: CGRect, screens: [WindowPlacementEngine.Screen], gap: CGFloat
     ) -> WindowPlacementEngine.Placement? {
         guard let host = WindowPlacementEngine.screen(containing: windowFrame, in: screens),
-            let frame = frame(in: host.visibleFrame, gap: gap)
+            let frame = frame(in: host.visibleFrame, gap: gap, current: windowFrame.size)
         else { return nil }
         return WindowPlacementEngine.Placement(
-            frame: frame, screenID: host.id, anchor: anchor.placement, resizes: true)
+            frame: frame, screenID: host.id, anchor: anchor.placement, resizes: !movesOnly)
     }
 }
 

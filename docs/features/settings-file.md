@@ -177,13 +177,14 @@ in `commands.builtIn` — by their ID after `command:`. App Launcher and Dictati
 
 ## Window management
 
-- **`shortcuts`** lists all 39 commands by ID, `null` when unbound; one left out is unbound too.
+- **`shortcuts`** lists all 40 commands by ID, `null` when unbound; one left out is unbound too.
 - **`aliases`** lists only the commands that have one.
 - **`customSizes`, `layouts` and `rooms`** each carry their record's `shortcut` and `alias`. A record
   keeps its `id`, because favorites, aliases, ranking and visibility key on it; one written without an
   `id` gets a stable one derived from its name.
-- A custom size's `width` and `height` are `"60%"` or `"900pt"`, a bare number read as points. A layout
-  app's `width` and `height` are fractions of its display, in full precision.
+- A custom size's `width` and `height` are `"60%"` or `"900pt"`, a bare number read as points, or
+  `"current"` to keep the window's own length. Its `offset` `x` and `y` are each a number of points
+  or `"10%"`. A layout app's `width` and `height` are fractions of its display, in full precision.
 - A room's window numbers and when it was last entered stay out of the file, and survive an edit to
   the room: `Room.keepingRuntime(of:)` returns a number only to a window of the same app.
 

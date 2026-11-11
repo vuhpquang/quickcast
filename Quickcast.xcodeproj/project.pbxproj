@@ -649,6 +649,7 @@
 		B9556AE8B7738FAF1C49F5BE /* AppSettingsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415662A96E643C16A4B8FFD4 /* AppSettingsKey.swift */; };
 		B973D0DF6A90493A8594481C /* PalettePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A8AAC881C3481BE8A39689 /* PalettePanel.swift */; };
 		B9D939D9EE6BFD40E5C0EBEF /* DictationWire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB4CC7199E2A04EE798789A /* DictationWire.swift */; };
+		BA923D89600A31C26CA9EDF5 /* CustomWindowSize+Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C5B7A7E0C99A79BE90A6554 /* CustomWindowSize+Move.swift */; };
 		BAB403E55B720472EE52E6A4 /* UpcomingWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135E2B72DD4C30CD89E02627 /* UpcomingWindow.swift */; };
 		BB587FEE5A08A74FF07E2269 /* CalcPercent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FA926A972F79C15897F1F4 /* CalcPercent.swift */; };
 		BB67CE1AF23F90BDB97C3000 /* ExtensionCleanup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73AB98D429A0E439BA3BF1D /* ExtensionCleanup.swift */; };
@@ -774,6 +775,7 @@
 		DF389DED1E50A9746DD195EB /* SystemActionFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BE5A65D520663464DB81F4 /* SystemActionFailure.swift */; };
 		DF8FEFBEC13E36A219967087 /* MenuBarSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745F29D46E5083FAFAF5F5AF /* MenuBarSummary.swift */; };
 		DFF44C2FB6219116D5F2DE57 /* MCPServerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB454C0D3E9E33EEC59F4F3 /* MCPServerConnection.swift */; };
+		E09C96F7EED06D087B81059F /* MoveWindowArgumentsAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69BF539C829E53957A7D1B54 /* MoveWindowArgumentsAccessory.swift */; };
 		E0A432857488FCE53F5E1F74 /* SpaceSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C061C62670ED499C68E7B /* SpaceSwitcher.swift */; };
 		E0B785C0D791B389AC31CA1A /* ScreenTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEF9CEF0CD17751B3BB6743 /* ScreenTarget.swift */; };
 		E0CCA3FC1835816573C9A1BE /* ThumbnailCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CC7B1E7BA4CB2E62AFE4314 /* ThumbnailCache.swift */; };
@@ -818,6 +820,7 @@
 		EB7E1B50D1D25BD3F8282E67 /* SettingsFileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A07720C82F546001825542A /* SettingsFileRepository.swift */; };
 		EBF1C55A5C080CE8597BE6C8 /* AIAttachmentPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88460017461132B8CFFBA86E /* AIAttachmentPolicy.swift */; };
 		EC1A6A25F99F810BB8D9F081 /* DictationModelDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5341F11E6BB11E5D14B93A9E /* DictationModelDownloader.swift */; };
+		EC51B570D97C064B0A2F6389 /* WindowCommandCoordinator+Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B0BA55861823A8079CB198 /* WindowCommandCoordinator+Move.swift */; };
 		EC8A7BA7D20D802AF4809C0E /* UninstallSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07ADA9A1C0295F1E1E44E4C /* UninstallSession.swift */; };
 		ECCA3CA3A44CFBC7EE7666D8 /* AXMenuAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A23C0A4C81DD2D32F421 /* AXMenuAccess.swift */; };
 		ECFCDA1586BCEE7F13FB2DC9 /* QuickActionResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504F3A29812D4598E2107644 /* QuickActionResultView.swift */; };
@@ -1320,6 +1323,7 @@
 		68F89DE64A9438D71F6809FE /* FileSearchFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSearchFilter.swift; sourceTree = "<group>"; };
 		69205211DC34F7BA259549E6 /* ModifierTapMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifierTapMonitor.swift; sourceTree = "<group>"; };
 		69B29D2085A5DC0B3011DC3A /* EventEditorSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventEditorSession.swift; sourceTree = "<group>"; };
+		69BF539C829E53957A7D1B54 /* MoveWindowArgumentsAccessory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveWindowArgumentsAccessory.swift; sourceTree = "<group>"; };
 		69C573AB2ED6447757187135 /* InterfaceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceMetrics.swift; sourceTree = "<group>"; };
 		6A4FCD6125CEEC1C6A5E5901 /* SettingsEditorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEditorPresenter.swift; sourceTree = "<group>"; };
 		6A92915E8170E603E204BE3C /* RoomRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomRunner.swift; sourceTree = "<group>"; };
@@ -1439,6 +1443,7 @@
 		88CB287B7AC7828413E7F85C /* FrontmostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontmostApp.swift; sourceTree = "<group>"; };
 		88F1965818D1D474986A6582 /* CodexAppServerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexAppServerProtocol.swift; sourceTree = "<group>"; };
 		891C9A85DC8CE674CA859032 /* WindowLayoutArgumentField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowLayoutArgumentField.swift; sourceTree = "<group>"; };
+		89B0BA55861823A8079CB198 /* WindowCommandCoordinator+Move.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WindowCommandCoordinator+Move.swift"; sourceTree = "<group>"; };
 		89E4C3BE9193F41519DCC1B4 /* PaletteState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteState.swift; sourceTree = "<group>"; };
 		8A07720C82F546001825542A /* SettingsFileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFileRepository.swift; sourceTree = "<group>"; };
 		8A41A53BAF88A2EC04027ED3 /* ChatFind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFind.swift; sourceTree = "<group>"; };
@@ -1448,6 +1453,7 @@
 		8C27ECE85FF9E57176441426 /* BackupStaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupStaging.swift; sourceTree = "<group>"; };
 		8C38A9B2569A4CB666F19708 /* CustomQuickActionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQuickActionStore.swift; sourceTree = "<group>"; };
 		8C5656BBD9004AC12DF5FC06 /* HealthTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthTicker.swift; sourceTree = "<group>"; };
+		8C5B7A7E0C99A79BE90A6554 /* CustomWindowSize+Move.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomWindowSize+Move.swift"; sourceTree = "<group>"; };
 		8C66FFFDA2C79277D4D24861 /* ChatHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatHistoryStore.swift; sourceTree = "<group>"; };
 		8C7CEB32F370DFC48ED73C91 /* AIEmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIEmptyState.swift; sourceTree = "<group>"; };
 		8CB0BAEFDA2E4EA9251A6779 /* ExtensionPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionPageView.swift; sourceTree = "<group>"; };
@@ -2200,6 +2206,7 @@
 			isa = PBXGroup;
 			children = (
 				DB82B87D7E47BB485F48F02D /* CustomWindowSizeCoordinator.swift */,
+				69BF539C829E53957A7D1B54 /* MoveWindowArgumentsAccessory.swift */,
 				F75E5FC897E672A9884FCB7F /* RoomCoordinator.swift */,
 				3B83680D5F1A896C57F7E318 /* RoomPickerList.swift */,
 				30CBC3EA416F260ABF1F09D3 /* RoomPickerScreen.swift */,
@@ -2208,6 +2215,7 @@
 				D3B45138A83A628398DBFFC3 /* RoomsList.swift */,
 				9066FB617B84615EAF887E87 /* RoomsScreen.swift */,
 				83B82272FDD15D1409B0A7D8 /* WindowCommandCoordinator.swift */,
+				89B0BA55861823A8079CB198 /* WindowCommandCoordinator+Move.swift */,
 				9219F294BFA5B188E742127D /* WindowLayoutCoordinator.swift */,
 				9B862E07F92D37E6EEAC3FAF /* WindowShortcutPresetCoordinator.swift */,
 			);
@@ -2528,6 +2536,7 @@
 			isa = PBXGroup;
 			children = (
 				40BA2DEF55E5595588B4E9AD /* CustomWindowSize.swift */,
+				8C5B7A7E0C99A79BE90A6554 /* CustomWindowSize+Move.swift */,
 				EEB5F063C5B81D398C2F57FF /* CustomWindowSizeStore.swift */,
 				BCB2611C277BC7E488E047EB /* Room.swift */,
 				782CF9DEA83FF6AD584A2149 /* RoomArrangement.swift */,
@@ -4448,6 +4457,7 @@
 				D608ECCFBD1ED19D36EF9858 /* CustomQuickActionEditorPanel.swift in Sources */,
 				7796BE058E2D2AB8BD12A129 /* CustomQuickActionStore.swift in Sources */,
 				C515C150FF934667E3B8361F /* CustomWindowSize+DeepLink.swift in Sources */,
+				BA923D89600A31C26CA9EDF5 /* CustomWindowSize+Move.swift in Sources */,
 				47A6D592690C309F29821DBF /* CustomWindowSize.swift in Sources */,
 				A7A61D704801551DB507DDA3 /* CustomWindowSizeCoordinator.swift in Sources */,
 				BCDD38B5C6577CE115B2C6BD /* CustomWindowSizeEditorPanel.swift in Sources */,
@@ -4777,6 +4787,7 @@
 				5511602C87952785DCE686FB /* ModifierKeyDetector.swift in Sources */,
 				F5831BD94A07FF1B32692694 /* ModifierTapMonitor.swift in Sources */,
 				84867E7D4465C9777F1D07D1 /* Motion.swift in Sources */,
+				E09C96F7EED06D087B81059F /* MoveWindowArgumentsAccessory.swift in Sources */,
 				E64E3E7C7B7CEE168942FCDE /* NavigationSettingsView.swift in Sources */,
 				499653218AB5CED24ADA14F9 /* NoteBlockDecoration.swift in Sources */,
 				A17B1D4F02C257AA5223A0F5 /* NoteBlockLayoutFragment.swift in Sources */,
@@ -5051,6 +5062,7 @@
 				1BA0C4922D81A4CCA8E9CE65 /* WindowActionMemory.swift in Sources */,
 				5EF989AB53D24A88F9FCA56E /* WindowChrome.swift in Sources */,
 				E89B8F3E34A048DF0366F31C /* WindowCommand.swift in Sources */,
+				EC51B570D97C064B0A2F6389 /* WindowCommandCoordinator+Move.swift in Sources */,
 				B231EAEE42A3AF6EE807039E /* WindowCommandCoordinator.swift in Sources */,
 				3C112737338724BFCD4341EB /* WindowCycle.swift in Sources */,
 				DBBAEEDEC5DC66FC7B566B65 /* WindowDragHandle.swift in Sources */,

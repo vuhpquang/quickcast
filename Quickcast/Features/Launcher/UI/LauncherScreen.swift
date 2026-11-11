@@ -53,8 +53,9 @@ struct LauncherScreen: PaletteScreen {
         self.scrollToFollow = scrollToFollow
 
         // Listed even when hidden from search: the shortcut that opened it must still be answered.
-        let pinned = vm.argumentEntryID.flatMap(core.customCommands.command(entryID:))
-            .map(AppEntry.init).flatMap { $0.name == vm.query ? $0 : nil }
+        let pinned = (vm.argumentEntryID.flatMap(core.customCommands.command(entryID:))
+            .map(AppEntry.init) ?? Self.pinnedWindowCommand(vm.argumentEntryID))  // Quickcast fork
+            .flatMap { $0.name == vm.query ? $0 : nil }
         let ordered =
             pinned.map { AppIndex.Results(entries: [$0], matchCount: 1) }
             ?? appIndex.orderedResults(
@@ -192,11 +193,26 @@ struct LauncherScreen: PaletteScreen {
                 metrics: core.settings.interfaceSize.metrics, focus: focus,
                 onSubmit: { activate(at: selection) })
         }
+        // Quickcast fork: Move Window's X and Y.
+        if let move = MoveWindowArgumentsAccessory.make(
+            entry: entry, vm: vm, metrics: core.settings.interfaceSize.metrics, focus: focus,
+            onSubmit: { activate(at: selection) })
+        {
+            return move
+        }
         return ExtensionArgumentsAccessory.make(
             entry: entry, coordinator: core.extensionCoordinator,
             values: { name in headerFieldBinding(entry: entry, name: name) },
             focus: focus, metrics: core.settings.interfaceSize.metrics,
             onSubmit: { activate(at: selection) })
+    }
+
+    /// Quickcast fork: Move Window asks for its X and Y the way a custom command does.
+    private static func pinnedWindowCommand(_ entryID: String?) -> AppEntry? {
+        guard let command = entryID.flatMap(WindowCommandCatalog.command(forEntryID:)) else {
+            return nil
+        }
+        return AppEntry(command)
     }
 
     private func headerFieldBinding(entry: AppEntry, name: String) -> Binding<String> {

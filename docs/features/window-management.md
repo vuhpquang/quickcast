@@ -2,7 +2,7 @@
 
 Rectangle-style window actions — halves, quarters, fourths, thirds, sizing, nudging, edge moves,
 display moves, native fullscreen and Space switching — searchable in the palette and bindable to
-global shortcuts. 39 commands, plus any number of user-defined [custom sizes](#custom-sizes), no new
+global shortcuts. 40 commands, plus any number of user-defined [custom sizes](#custom-sizes), no new
 dependencies and no new permission: they reuse the Accessibility grant clipboard paste already needs.
 
 Ships **off**. Settings › Window Management is the switch, and while it is off there are no launcher
@@ -51,6 +51,9 @@ entries and a still-registered shortcut moves nothing.
 | `UI/CustomWindowSizeCoordinator.swift` | Foundation                 | Custom sizes' launcher presence, edits and a deletion's cleanup     |
 | `Model/WindowShortcutPreset.swift`   | Foundation + Carbon          | **Pure.** Rectangle / Magnet and Spectacle tables, and the apply plan |
 | `UI/WindowShortcutPresetCoordinator.swift` | Foundation             | Applies a preset, confirming first when it replaces a user's key   |
+| `Model/CustomWindowSize+Move.swift`  | Foundation                   | **Pure.** Fork: Move Window's typed X and Y as a custom size        |
+| `UI/WindowCommandCoordinator+Move.swift` | Foundation               | Fork: runs Move Window, or opens its fields when input is short     |
+| `UI/MoveWindowArgumentsAccessory.swift` | SwiftUI                   | Fork: Move Window's X and Y fields in root search                   |
 
 The feature also owns **[Window Layouts](window-layouts.md)** — saved multi-display arrangements
 applied in one pass — and **[Rooms](window-rooms.md)**, named sets of windows that tile on the
@@ -65,7 +68,7 @@ overlay rather than in Foundation.
 
 Adding a command is four edits in `WindowCommand.swift` (a case in `ID`, plus `name`, `symbol` and
 `group` arms), an arm in `WindowPlacementEngine.placement` or `tileFractions`, and bumping
-`commands.count == 39` and its group count in the harness. A command opening a new family also needs
+`commands.count == 40` and its group count in the harness. A command opening a new family also needs
 a `Group` case and its `title` arm; `ID.allCases` stays in group order.
 
 ## Coordinate space
@@ -132,9 +135,10 @@ full-height and still off-screen.
 
 ## Custom sizes
 
-A **custom size** is a user-defined command: a name, a width and a height — each in points or as a
-percentage — a position on the 3×3 grid [Window Layouts](window-layouts.md) uses, and an optional
-offset in points on top of that position. It acts on the focused window exactly as a built-in
+A **custom size** is a user-defined command: a name, a width and a height — each in points, as a
+percentage, or **Current** to keep the window's own length — a position on the 3×3 grid
+[Window Layouts](window-layouts.md) uses, and an optional offset on top of that position, each axis
+in points or as a percentage of the box. It acts on the focused window exactly as a built-in
 command does, and is the answer for a display where Reasonable Size is wrong: no single built-in
 size suits every screen, so the size is the user's.
 
@@ -152,8 +156,42 @@ size suits every screen, so the size is the user's.
   `WindowActionMemory` records it with a `nil` command: it never cycles and is never a tile, so a
   following Next Display scales the window rather than re-deriving a tile.
 - **A unit switch in the editor converts** the number against the main display, so 50% becomes the
-  points it was on that screen. Stored values are whole numbers, clamped rather than rejected — a
-  bad import keeps the record.
+  points it was on that screen; an offset's pt / % switch converts the same way. Switching a length to
+  or from Current keeps the number, since Current has none. Stored values are whole numbers, clamped
+  rather than rejected — a bad import keeps the record.
+- **Current on both lengths makes it a move** (`CustomWindowSize.movesOnly`): the placement says
+  `resizes: false`, so the mover never writes a size, and a window larger than the box keeps its size
+  with its leading edge pinned rather than being shrunk. Current on one length resizes only the other,
+  the kept one capped by the box like any length.
+
+### Moving to an exact position
+
+The fork reverses the upstream "move without resizing" decision (#1511). A move is a custom size
+with Current on both lengths, so an exact position is the anchor — any corner, edge or the centre
+of the window's display — plus the offset, in points or as a share of the gap-inset visible frame,
++Y down. Saved moves are custom sizes in every respect: launcher rows, aliases, shortcuts, the
+`window-size/<uuid>` link, backups and `settings.json`.
+
+**Move Window** (`window-command:move-window`) is the one-off: a built-in command whose row in root
+search shows X and Y fields, as a custom command's do. `120` is points, `10%` a share; both count
+from the top left of the window's display. ↵ with a field empty moves to it rather than running, and
+a shortcut or a link with no or invalid input opens the launcher on that row, fields filled with what
+was given. Its link takes `{x, y, anchor}`. `CustomWindowSize.move(x:y:anchor:)` is the one parser,
+shared by the fields, the link and the coordinator, and it refuses rather than clamps.
+
+What upstream called odd side effects of a bare position write, and what answers each:
+
+- **A move that resizes.** macOS can shrink a window it carries onto a display it does not fit, and
+  some apps answer a position change with a size change. The move-only write reads the frame back
+  and, when the size drifted beyond `clampTolerance` and the size is settable, writes the old size
+  and the position once more. One correction, no loop — the same rule as a refused shrink.
+- **An animated move.** With `AXEnhancedUserInterface` on, Electron and Chromium apps animate a frame
+  change, so the read-back saw a mid-flight frame and the next command read it as the user's drag.
+  The mover now clears it around every write, moves included, not only resizes.
+- **Coordinates on another display.** A move never names a global point: the position resolves on the
+  window's own display, in AX space through the one primary-anchored flip, then is clamped into that
+  display's box, so a display left of or above the primary behaves like the primary.
+- **Size → position ordering.** Not involved: a pure move writes no size unless correcting a drift.
 
 A custom size shares the window commands' `AppEntry.Kind`, their launcher section and their
 `windowManagementShowInLauncher` switch, the way custom Quick Actions share the shipped four's:
@@ -270,7 +308,9 @@ always a no-op.
 
 - Position not settable → return with **zero** writes; the window is untouched.
 - Size not settable → the move-only branch: one position write placing the size it already has inside
-  the slot per the placement's anchor. One coherent move, never a half-applied one.
+  the slot per the placement's anchor. One coherent move, never a half-applied one. The nudges, edge
+  moves and [moves](#moving-to-an-exact-position) take the same branch, and there a size the move
+  changed is written back once.
 - The position write fails after the shrink → roll the size back. Net visible effect: nothing.
 
 The frame is read back **once** afterwards, for three reasons: to detect an app-imposed minimum size
@@ -442,7 +482,9 @@ framing of the field-4205 record.
 Custom sizes are covered in `Tests/window-layout-test.swift`, beside the anchor grid they share: the
 entry id, unit clamping and conversion, exact frames on every fixture display, gap and offset
 arithmetic, the host-display placement, and store CRUD, validation, import sanitising and
-persistence.
+persistence. Moves add Current lengths, percent offsets, every anchor clamped onto the display at the
+window's own size, an oversized window left unshrunk, moves on negative-origin displays, legacy
+offsets decoding as points, and Move Window's parser refusing bad input.
 
 Everything runs headless because the layer is pure. `WindowMover` and `SpaceSwitcher` are not compiled
 into either harness and have no automated coverage — the AX and `CGEvent` paths need manual
@@ -465,3 +507,6 @@ verification, particularly:
    not wedge the Dock or land two Spaces at once. A Space switch is not observable until it settles —
    sampling sooner than about three seconds returns mid-transition state that reads as a dropped or
    doubled move, which will make a working build look broken.
+7. Move Window and a Current × Current custom size: the window keeps its size, including a Terminal
+   window (cell-snapped) and an Electron app; on a secondary display left of the primary; and a
+   window larger than its display moves without shrinking.

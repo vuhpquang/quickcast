@@ -105,7 +105,8 @@ final class LauncherCoordinator {
         }
         if app.kind == .windowCommand {
             if let command = WindowCommandCatalog.command(forEntryID: app.id) {
-                windowCommandCoordinator.runWindowCommand(id: command.id)
+                // Quickcast fork: Move Window takes its typed X and Y.
+                windowCommandCoordinator.runWindowCommand(id: command.id, values: arguments)
                 return
             }
             guard let id = CustomWindowSize.id(fromEntryID: app.id) else { return }
@@ -305,6 +306,8 @@ final class LauncherCoordinator {
         case .customCommand:
             guard let command = core.customCommands.command(entryID: entry.id) else { return [:] }
             return CustomCommandArgumentsAccessory.values(for: command, vm: palette)
+        case .windowCommand:
+            return MoveWindowArgumentsAccessory.values(for: entry, vm: palette)  // Quickcast fork
         default:
             var values: [String: String] = [:]
             for argument in extensionCoordinator.commandArguments(for: entry) ?? [] {

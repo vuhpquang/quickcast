@@ -36,6 +36,7 @@ struct WindowCommand: Identifiable, Hashable, Sendable {
         case moveToRightEdge = "move-to-right-edge"
         case moveToTopEdge = "move-to-top-edge"
         case moveToBottomEdge = "move-to-bottom-edge"
+        case moveWindow = "move-window"  // Quickcast fork: takes a typed position
         case nextDisplay = "next-display"
         case previousDisplay = "previous-display"
         case toggleFullscreen = "toggle-fullscreen"
@@ -122,7 +123,8 @@ enum WindowCommandCatalog {
 
     static let movesOnly: Set<WindowCommand.ID> = [
         .moveLeft, .moveRight, .moveUp, .moveDown,
-        .moveToLeftEdge, .moveToRightEdge, .moveToTopEdge, .moveToBottomEdge
+        .moveToLeftEdge, .moveToRightEdge, .moveToTopEdge, .moveToBottomEdge,
+        .moveWindow  // Quickcast fork
     ]
 
     private static func name(for id: WindowCommand.ID) -> LocalizedStringResource {
@@ -161,6 +163,7 @@ enum WindowCommandCatalog {
         case .moveToRightEdge: return "Move to Right Edge"
         case .moveToTopEdge: return "Move to Top Edge"
         case .moveToBottomEdge: return "Move to Bottom Edge"
+        case .moveWindow: return "Move Window"
         case .nextDisplay: return "Move to Next Display"
         case .previousDisplay: return "Move to Previous Display"
         case .toggleFullscreen: return "Toggle Fullscreen"
@@ -203,6 +206,7 @@ enum WindowCommandCatalog {
         case .moveToRightEdge: return "arrow.right.to.line"
         case .moveToTopEdge: return "arrow.up.to.line"
         case .moveToBottomEdge: return "arrow.down.to.line"
+        case .moveWindow: return "arrow.up.and.down.and.arrow.left.and.right"
         case .nextDisplay: return "rectangle.on.rectangle.angled"
         case .previousDisplay: return "rectangle.on.rectangle.angled"
         case .toggleFullscreen: return "arrow.up.left.and.arrow.down.right.square"
@@ -234,7 +238,7 @@ enum WindowCommandCatalog {
             .centerHalf, .centerTwoThirds, .makeLarger, .makeSmaller, .restore:
             return .sizing
         case .moveLeft, .moveRight, .moveUp, .moveDown, .moveToLeftEdge, .moveToRightEdge,
-            .moveToTopEdge, .moveToBottomEdge, .nextDisplay, .previousDisplay:
+            .moveToTopEdge, .moveToBottomEdge, .moveWindow, .nextDisplay, .previousDisplay:
             return .moving
         case .toggleFullscreen:
             return .fullscreen

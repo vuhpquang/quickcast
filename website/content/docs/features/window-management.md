@@ -1,6 +1,6 @@
 ---
 title: Window management
-description: 39 commands for halves, quarters, thirds, sizing, nudges, edges, displays and fast Space switching.
+description: 40 commands for halves, quarters, thirds, sizing, nudges, edges, exact positions, displays and fast Space switching.
 ---
 
 Move and resize the window you were last using, without installing another app.
@@ -28,7 +28,7 @@ of several windows across your displays.
 Center · Center Half · Center Two Thirds · Make Larger · Make Smaller · Restore Window
 
 **Moving** · Move Left · Move Right · Move Up · Move Down · Move to Left Edge · Move to Right Edge ·
-Move to Top Edge · Move to Bottom Edge · Move to Next Display · Move to Previous Display
+Move to Top Edge · Move to Bottom Edge · Move Window · Move to Next Display · Move to Previous Display
 
 **Fullscreen** · Toggle Fullscreen
 
@@ -74,8 +74,9 @@ area already excludes the menu bar, the Dock and the notch.
 
 When no built-in size suits your screen, make your own. In
 **Settings → Window Management → Custom Sizes**, click **New Custom Size** and give it a name, a
-width and a height. Each is in points or a percentage of the screen. Then choose a position on a
-3 × 3 grid, with an optional offset in points.
+width and a height. Each is in points, a percentage of the screen, or **Current** to keep the
+window's own size. Then choose a position on a 3 × 3 grid, with an optional offset in points or as a
+percentage of the screen.
 
 A custom size works like a built-in command. It has its own launcher entry, shortcut, alias and
 checkbox, and it follows **Show in launcher**. It resizes the window you were last using, on the
@@ -83,6 +84,15 @@ display it's already on, so one shortcut works on your laptop and at your desk. 
 the screen fills the screen instead.
 
 Restore Window undoes a custom size. Custom sizes never cycle.
+
+## Moving to an exact position
+
+Set both the width and the height of a custom size to **Current** and it only moves the window, to
+the corner and offset you chose, without resizing it. A window larger than the screen keeps its size.
+
+For a one-off move, type **Move Window** in the launcher and fill in **X** and **Y**: `120` is
+points and `10%` is a share of the screen, both measured from the top left of the window's display.
+The window always stays on its display.
 
 ## Cycling and Restore
 

@@ -480,6 +480,7 @@ run window-layout-test     Quickcast/Features/WindowManagement/Model/WindowComma
                            Quickcast/Features/WindowManagement/Model/WindowLayoutPlan.swift \
                            Quickcast/Features/WindowManagement/Model/WindowLayoutStore.swift \
                            Quickcast/Features/WindowManagement/Model/CustomWindowSize.swift \
+                           Quickcast/Features/WindowManagement/Model/CustomWindowSize+Move.swift \
                            Quickcast/Features/WindowManagement/Model/CustomWindowSizeStore.swift \
                            Quickcast/Platform/LocalizedResource.swift
 run deeplink-test          Quickcast/Features/DeepLinks/Model/DeepLink.swift \
@@ -513,6 +514,7 @@ run deeplink-test          Quickcast/Features/DeepLinks/Model/DeepLink.swift \
                            Quickcast/Features/WindowManagement/Model/RoomWindow.swift \
                            Quickcast/Features/WindowManagement/Model/Room.swift \
                            Quickcast/Features/WindowManagement/Model/CustomWindowSize.swift \
+                           Quickcast/Features/WindowManagement/Model/CustomWindowSize+Move.swift \
                            Quickcast/Platform/LocalizedResource.swift
 run window-room-test       Quickcast/Features/WindowManagement/Model/WindowCommand.swift \
                            Quickcast/Features/WindowManagement/Model/WindowCycle.swift \
@@ -543,6 +545,7 @@ run window-file-test       Quickcast/Features/WindowManagement/Model/WindowComma
                            Quickcast/Features/WindowManagement/Model/WindowLayout.swift \
                            Quickcast/Features/WindowManagement/Model/WindowLayoutGeometry.swift \
                            Quickcast/Features/WindowManagement/Model/CustomWindowSize.swift \
+                           Quickcast/Features/WindowManagement/Model/CustomWindowSize+Move.swift \
                            Quickcast/Features/WindowManagement/Model/Room.swift \
                            Quickcast/Features/WindowManagement/Model/RoomWindow.swift \
                            Quickcast/Features/WindowManagement/Model/RoomLayoutKind.swift \

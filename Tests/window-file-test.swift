@@ -88,6 +88,30 @@ struct WindowFileTest {
         check(
             "an unknown position falls back to the centre and is reported",
             first?.records.last?.anchor == .center && first?.problems.count == 2)
+
+        let move = CustomWindowSize(
+            name: "Corner", width: .init(1, .current), height: .init(1, .current),
+            anchor: .topLeft, offset: .init(x: 10, y: 40, xUnit: .percent))
+        let moveJSON = WindowManagementFileFormat.json(move, shortcut: nil, alias: nil)
+        check("a kept length is spelled current", moveJSON["width"] == "current")
+        check(
+            "a percent offset is a string, points stay a number",
+            moveJSON["offset"]?["x"] == "10%" && moveJSON["offset"]?["y"] == .number(40))
+        check(
+            "a move round-trips",
+            WindowManagementFileFormat.customSizes(from: .array([moveJSON]))?.records == [move])
+        let typed = WindowManagementFileFormat.customSizes(
+            from: .array([
+                .object([
+                    "name": "Typed", "width": "Current", "height": "50%",
+                    "offset": .object(["x": "-5%", "y": "12pt"])
+                ])
+            ]))
+        check(
+            "a hand-written current width and spelled offsets read",
+            typed?.records.first?.width.unit == .current
+                && typed?.records.first?.offset
+                    == .init(x: -5, y: 12, xUnit: .percent, yUnit: .points))
     }
 
     private static func testLayouts() {
