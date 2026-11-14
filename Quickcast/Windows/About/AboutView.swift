@@ -77,9 +77,14 @@ struct AboutView: View {
                 .font(.caption)
             }
 
-            Text("A native macOS launcher for everyday productivity. Lightweight and open source.")
-                .font(.callout)
-                .foregroundStyle(.secondary)
+            VStack(spacing: Theme.Spacing.xs) {
+                Text("A native macOS launcher for everyday productivity. Lightweight and open source.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                // Author identity as in every app of the family (hub rule .claude/rules/app-shell.md).
+                Text("Made by \(AboutLink.authorName)")
+                    .font(.callout.weight(.medium))
+            }
         }
     }
 
@@ -123,9 +128,13 @@ struct AboutView: View {
     }
 
     private var footer: some View {
-        Text("© 2026 Abue Ammar · Released under AGPL-3.0")
-            .font(.caption2)
-            .foregroundStyle(.tertiary)
+        VStack(spacing: Theme.Spacing.xxs) {
+            Text(verbatim: "© 2026 \(AboutLink.authorName)")
+            // Quickcast is a fork of Tinycast (AGPL-3.0): the original notice stays.
+            Text("© 2026 Abue Ammar · Released under AGPL-3.0")
+        }
+        .font(.caption2)
+        .foregroundStyle(.tertiary)
     }
 }
 
@@ -142,11 +151,27 @@ private struct AboutLink: Identifiable {
     let detail: String
     let url: URL
 
+    /// Same values as app-shell's `Author` (github.com/vuhpquang/app-shell); Quickcast doesn't link the
+    /// package, so keep these in sync by hand.
+    static let authorName = "Ha Phung Quang Vu"
+
     static let all: [AboutLink] = [
         AboutLink(
             id: "github", glyph: .brand("BrandGitHub"), title: "GitHub",
             detail: "github.com/vuhpquang/quickcast",
             url: URL(string: "https://github.com/vuhpquang/quickcast")!),
+        AboutLink(
+            id: "issue", glyph: .symbol("exclamationmark.bubble"), title: String(localized: "Report an Issue"),
+            detail: "github.com/vuhpquang/quickcast/issues",
+            url: URL(string: "https://github.com/vuhpquang/quickcast/issues/new")!),
+        AboutLink(
+            id: "website", glyph: .symbol("person.crop.circle"), title: authorName,
+            detail: "vuhpquang.com",
+            url: URL(string: "https://vuhpquang.com")!),
+        AboutLink(
+            id: "linkedin", glyph: .symbol("link"), title: "LinkedIn",
+            detail: "linkedin.com/in/vuhpquang",
+            url: URL(string: "https://www.linkedin.com/in/vuhpquang/")!),
         // Quickcast is a fork of Tinycast (AGPL-3.0); credit the original project.
         AboutLink(
             id: "upstream", glyph: .symbol("arrow.triangle.branch"), title: "Tinycast",

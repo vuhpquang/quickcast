@@ -78,7 +78,7 @@
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Quickcast uses Bluetooth access only when you run the Toggle Bluetooth action.</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Quickcast</string>
+	<string>© 2026 Ha Phung Quang Vu · Based on Tinycast by Abue Ammar</string>
 	<key>QuickcastUpdatePublicKey</key>
 	<string>T2dtqvy+2Fn9K/vGdwL7Z+1wJTi+IKN7SdsPA8BzEFk=</string>
 </dict>
