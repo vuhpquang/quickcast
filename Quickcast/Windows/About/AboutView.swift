@@ -82,6 +82,12 @@ struct AboutView: View {
                     .font(.callout)
                     .foregroundStyle(.secondary)
                 // Author identity as in every app of the family (hub rule .claude/rules/app-shell.md).
+                Image("AuthorLogo")
+                    .resizable()
+                    .interpolation(.high)
+                    .frame(width: 32, height: 32)
+                    .accessibilityHidden(true)
+                    .padding(.top, Theme.Spacing.xs)
                 Text("Made by \(AboutLink.authorName)")
                     .font(.callout.weight(.medium))
             }
