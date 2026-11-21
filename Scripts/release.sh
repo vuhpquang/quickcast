@@ -28,7 +28,7 @@ PBXPROJ="Quickcast.xcodeproj/project.pbxproj"
 DERIVED="build/release-dd"
 APP="$DERIVED/Build/Products/Release/Quickcast.app"
 # Fails on this Mac on untouched upstream Tinycast too (PTY streaming), so it never blocks a release.
-KNOWN_FAILING="custom-command-test"
+KNOWN_FAILING="CustomCommandTests"
 DRY_RUN="${DRY_RUN:-0}"
 
 die()  { echo "error: $*" >&2; exit 1; }

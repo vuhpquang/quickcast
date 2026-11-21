@@ -14,15 +14,15 @@ exact link, typed fields included, so nobody has to build one by hand.
 
 `Features/DeepLinks/` holds:
 
-- `DeepLink` — the parsed link, and the URL builders (`Model/`).
-- `DeepLinkInput` — `fallbackText`, `arguments` and `context`: decoded, size-checked, encoded back
+- `DeepLink`: the parsed link, and the URL builders (`Model/`).
+- `DeepLinkInput` (`fallbackText`, `arguments` and `context`): decoded, size-checked, encoded back
   (`Model/`).
-- `DeepLinkConsentPolicy` — which links ask, and the key Always Allow stores (`Model/`).
-- `DeepLinkSource` — outside, or a quicklink of ours, and what each may run (`Model/`).
-- `CustomWindowSize+DeepLink` — a window size spelled out in a link (`Model/`).
-- `DeepLinkCoordinator` — on `AppCore`. It parses, gates, asks, and hands the target to its feature
+- `DeepLinkConsentPolicy`: which links ask, and the key Always Allow stores (`Model/`).
+- `DeepLinkSource`: outside, or a quicklink of ours, and what each may run (`Model/`).
+- `CustomWindowSize+DeepLink`: a window size spelled out in a link (`Model/`).
+- `DeepLinkCoordinator`: on `AppCore`. It parses, gates, asks, and hands the target to its feature
   (`UI/`).
-- `AllowedDeepLinksSection` — Settings → General → Deeplinks, where an Always Allow is removed
+- `AllowedDeepLinksSection`: Settings → General → Deeplinks, where an Always Allow is removed
   (`Settings/`).
 
 `ShortcutDeepLink` (`HotKeys/UI/`) is the environment value that puts Copy Deeplink on every
@@ -96,9 +96,9 @@ already cover them.
 
 The parameter names are case-insensitive:
 
-- **`fallbackText`** — text for the target's first field.
-- **`arguments`** — URL-encoded JSON. An object fills fields by name, an array fills them in order.
-- **`context`** — URL-encoded JSON for the create commands: one object, or a list of them.
+- **`fallbackText`**: text for the target's first field.
+- **`arguments`**: URL-encoded JSON. An object fills fields by name, an array fills them in order.
+- **`context`**: URL-encoded JSON for the create commands: one object, or a list of them.
 
 Values are coerced to the text a field would hold: numbers and booleans become their text, `null`
 becomes empty. **Malformed JSON, a nested value or a parameter over 64 KB (UTF-8 bytes) refuses the
@@ -135,7 +135,7 @@ row's fields, as a hotkey with no selection does. Any other target ignores its i
   `current` on both only moves the window.
 - Move Window is the same move with the size kept and `top-left` the default corner. Copy Deeplink on
   its row carries the typed X and Y.
-- Create Snippet with no input — from a link, a hotkey or the launcher — starts from the text
+- Create Snippet with no input (from a link, a hotkey or the launcher) starts from the text
   selected in the app in front, read through Accessibility (`AccessibilityText.selection(in:)`),
   never by sending ⌘C.
 
@@ -145,7 +145,7 @@ row's fields, as a hotkey with no selection does. Any other target ignores its i
 carries input, or when its target acts outside Quickcast.** The second half is an exhaustive switch,
 so a new command fails to build until it is classed:
 
-- **Never asks without input**: anything that only opens a Quickcast screen or editor — search
+- **Never asks without input**: anything that only opens a Quickcast screen or editor: search
   screens, Settings, notes, chats, the create commands, Quick AI.
 - **Always asks**: window commands and sizes, layouts, rooms, system actions, quicklinks, snippets,
   custom commands, Apple Shortcuts, custom Quick Actions, the AI text actions, Paste Sequentially,
@@ -168,7 +168,7 @@ Destructive system actions still ask their own question after it. One question s
 link that arrives meanwhile is logged and dropped. The gate is checked again after the answer, so a
 feature turned off during the question still wins.
 
-A link Quickcast opens itself — a quicklink whose link is the channel's own scheme — runs in-process
+A link Quickcast opens itself (a quicklink whose link is the channel's own scheme) runs in-process
 with `source: .quickcast`. It never asks, because the reader chose it in Quickcast. It never goes
 through LaunchServices either.
 
@@ -200,9 +200,18 @@ Sequentially want `open -g`.
       "type": "basic",
       "from": {
         "key_code": "v",
-        "modifiers": { "mandatory": ["left_command", "left_control", "left_option", "left_shift"] }
+        "modifiers": {
+          "mandatory": [
+            "left_command",
+            "left_control",
+            "left_option",
+            "left_shift"
+          ]
+        }
       },
-      "to": [{ "shell_command": "open -g 'quickcast://command/clipboard-history'" }]
+      "to": [
+        { "shell_command": "open -g 'quickcast://command/clipboard-history'" }
+      ]
     }
   ]
 }

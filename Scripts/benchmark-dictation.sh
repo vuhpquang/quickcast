@@ -11,7 +11,7 @@ models=${3:-"$HOME/Library/Caches/com.vuhpquang.quickcast.dev/Dictation"}
 binary=$(mktemp /tmp/quickcast-dictation-benchmark.XXXXXX)
 trap 'rm -f "$binary"' EXIT
 swiftc -O -swift-version 6 -target "$(uname -m)-apple-macos26.0" \
-    "$repo/Tests/dictation-performance.swift" \
+    "$repo/Tests/DictationPerformanceTests.swift" \
     "$repo/Quickcast/Platform/ProcessExit.swift" \
     "$repo/Quickcast/Features/Dictation/Model/DictationModel.swift" \
     "$repo/Quickcast/Features/Dictation/Service/DictationWire.swift" -o "$binary"

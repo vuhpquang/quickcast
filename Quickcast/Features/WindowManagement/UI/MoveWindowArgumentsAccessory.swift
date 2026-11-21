@@ -23,7 +23,8 @@ enum MoveWindowArgumentsAccessory {
             firstIncompleteField: firstOwed(),
             view: AnyView(
                 InlineArgumentFields(
-                    arguments: arguments, symbol: command.sfSymbol, value: value, focused: focus,
+                    arguments: arguments, symbol: command.sfSymbol, tint: SettingsTab.windowManagement.tint,
+                    value: value, focused: focus,
                     openOptions: { _ in },
                     onSubmit: {
                         guard let owed = firstOwed() else { return onSubmit() }

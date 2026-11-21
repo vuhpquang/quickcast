@@ -143,22 +143,22 @@ Each finished dictation is kept locally and browsed from the **Dictation History
   same actions. The detail pane shows the full text with application, model, date, words and
   characters.
 
-`dictation-history-test` covers append, the cap, Off, clear, removal, search, word counts and the
+`DictationHistoryTests` covers append, the cap, Off, clear, removal, search, word counts and the
 file round trip.
 
 ## Validation
 
-`dictation-cue-test` checks system resource paths, playback ordering and missing sounds without audio output.
-`dictation-field-test` checks composer switching and teardown, scoped cancellation, delayed insertion and
+`DictationCueTests` checks system resource paths, playback ordering and missing sounds without audio output.
+`DictationFieldTests` checks composer switching and teardown, scoped cancellation, delayed insertion and
 the order of sound cues against ducking
 with synthetic capture and real AppKit editors, without recording audio or touching the shared clipboard.
-`dictation-test` checks formatting and model options; `dictation-inference-test` checks score selection,
-byte BPE, Fourier/mel features, listening bands and audio partitioning without downloading a model. `dictation-worker-test`
+`DictationTests` checks formatting and model options; `DictationInferenceTests` checks score selection,
+byte BPE, Fourier/mel features, listening bands and audio partitioning without downloading a model. `DictationWorkerTests`
 exercises framed IPC, worker reuse/switching, removal, cancellation and broken pipes with a fixture.
 An in-process URLProtocol fixture checks byte progress before the first file completes, combined
 progress and atomic installation for both families, including cancellation, stale staging cleanup
 and competing downloads on shared or independent cache roots, without sockets or timed waits.
-`dictation-volume-test` uses private files and injected audio controls to verify crash recovery
+`DictationVolumeTests` uses private files and injected audio controls to verify crash recovery
 before and after fade steps, user volume changes, output switching, failed writes and rapid cancellation,
 without changing the system volume or downloading a model.
 

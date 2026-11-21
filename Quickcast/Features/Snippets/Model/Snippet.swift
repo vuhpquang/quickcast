@@ -7,6 +7,7 @@ struct Snippet: Sendable, Hashable {
     var isEnabled: Bool
     var showsConfirmation: Bool
     var tags: [String]  // Quickcast fork: normalized by SnippetTags where it is read or typed
+    var isPinned: Bool
 
     init(
         name: String,
@@ -14,7 +15,8 @@ struct Snippet: Sendable, Hashable {
         keyword: String? = nil,
         isEnabled: Bool = true,
         showsConfirmation: Bool = false,
-        tags: [String] = []
+        tags: [String] = [],
+        isPinned: Bool = false
     ) {
         self.name = name
         self.text = text
@@ -22,7 +24,24 @@ struct Snippet: Sendable, Hashable {
         self.isEnabled = isEnabled
         self.showsConfirmation = showsConfirmation
         self.tags = tags
+        self.isPinned = isPinned
     }
+}
+
+enum SnippetDefaultAction: String, CaseIterable, Identifiable, Sendable {
+    case paste
+    case copy
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .paste: String(localized: "Paste")
+        case .copy: String(localized: "Copy to Clipboard")
+        }
+    }
+
+    var alternate: Self { self == .paste ? .copy : .paste }
 }
 
 /// Fingerprint of a snippet file's bytes, detecting an external edit before a save or delete.

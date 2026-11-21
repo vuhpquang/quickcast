@@ -9,7 +9,7 @@ listed, and nothing runs until the screen is open.
 ## Invariants
 
 - **`Model/` stays Foundation-only.** `Screenshot`, `ScreenshotDetection`, `ScreenshotGrid`,
-  `ScreenshotGridColumns` and `ScreenshotTextStore` are compiled by `screenshots-test`.
+  `ScreenshotGridColumns` and `ScreenshotTextStore` are compiled by `ScreenshotsTests`.
 - **Captures are read where macOS saved them, never copied or indexed in the background.** The
   folder is listed when the screen opens and watched only while it is on screen.
 - **The thumbnails have their own cache.** `ScreenshotThumbnails` keeps a 48 MB `ThumbnailCache` so
@@ -111,6 +111,6 @@ and drops captures that left the folder.
 
 ## Validation
 
-`screenshots-test` covers detection by flag, name, localized and custom prefix; folder resolution;
+`ScreenshotsTests` covers detection by flag, name, localized and custom prefix; folder resolution;
 order and day grouping; date and text search; column zoom; grid navigation across days through
 `EmojiGridGeometry`; and the text store's folding, invalidation, pruning and file round trip.

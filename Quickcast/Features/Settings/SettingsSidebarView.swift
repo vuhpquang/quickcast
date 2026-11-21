@@ -3,7 +3,6 @@ import SwiftUI
 struct SettingsSidebarView: View {
     @Environment(SettingsNavigationState.self) private var navigation
     @Environment(AppCore.self) private var core
-    @Environment(\.appearsActive) private var appearsActive
     @State private var query = ""
     @State private var highlighted: SettingsSearchEntry.ID?
     @State private var searching = false
@@ -31,11 +30,7 @@ struct SettingsSidebarView: View {
                         Label {
                             Text(tab.title)
                         } icon: {
-                            SettingsTabIcon(
-                                systemImage: tab.systemImage,
-                                tint: appearsActive
-                                    ? (isSelected(tab) ? Color.primary : Color.accentColor)
-                                    : Color.secondary)
+                            SettingsTabIcon(tab: tab)
                         }
                         .tag(SettingsSidebarItem.tab(tab))
                     }
@@ -88,10 +83,6 @@ struct SettingsSidebarView: View {
             .accessibilityHidden(true)
     }
 
-    private func isSelected(_ tab: SettingsTab) -> Bool {
-        navigation.extensionName == nil && navigation.tab == tab
-    }
-
     /// `List` hands back an optional selection; routing it through `select` records history.
     private var selection: Binding<SettingsSidebarItem?> {
         Binding(
@@ -126,7 +117,7 @@ private struct SettingsSearchResultRow: View {
                     .truncationMode(.middle)
             }
         } icon: {
-            SettingsTabIcon(systemImage: entry.tab.systemImage, tint: .accentColor)
+            SettingsTabIcon(tab: entry.tab)
         }
         // Centred, not first-baseline: the tile sits against a two-line title and breadcrumb.
         .labelStyle(CenteredLabelStyle())

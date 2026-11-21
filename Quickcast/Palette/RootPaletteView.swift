@@ -74,7 +74,8 @@ struct RootPaletteView: View {
                 store: snippets, core: core, vm: vm, openActions: openActions)
         case .snippetEditor:
             return SnippetEditorScreen(
-                coordinator: core.snippetCoordinator, openInputMenu: openInputOptions)
+                coordinator: core.snippetCoordinator, openMenuCorner: menuCorner,
+                openInputMenu: openInputOptions)
         case .emoji:
             return EmojiScreen(
                 index: emojiIndex, frequent: frequentEmoji, pinned: core.pinnedEmoji, core: core, vm: vm,
@@ -229,6 +230,11 @@ struct RootPaletteView: View {
             header: title,
             items: [
                 PopoverMenuItem(
+                    title: String(localized: "Check for Updates"), systemImage: "arrow.down.circle"
+                ) {
+                    core.updateCoordinator.checkForUpdates()
+                },
+                PopoverMenuItem(
                     title: String(localized: "Changelog"),
                     systemImage: "clock.arrow.trianglehead.2.counterclockwise.rotate.90"
                 ) {
@@ -236,14 +242,18 @@ struct RootPaletteView: View {
                         openURL(url)
                     }
                 },
-                PopoverMenuItem(title: String(localized: "About Quickcast"), systemImage: "info.circle") {
+                PopoverMenuItem(
+                    title: String(localized: "About Quickcast"), systemImage: "info.circle",
+                    startsSection: true
+                ) {
                     core.settingsCoordinator.showAbout()
                 },
                 PopoverMenuItem(title: String(localized: "Support Quickcast"), systemImage: "heart") {
                     core.supportCoordinator.showSupport()
                 },
                 PopoverMenuItem(
-                    title: String(localized: "Settings"), systemImage: "gearshape", shortcut: "⌘,"
+                    title: String(localized: "Settings"), systemImage: "gearshape",
+                    startsSection: true, shortcut: "⌘,"
                 ) {
                     core.settingsCoordinator.showSettings()
                 },
@@ -270,7 +280,6 @@ struct RootPaletteView: View {
             let filtered = appMenuContent.matching(ActionMenuSearchQuery(vm.menuQuery))
             return PaletteMenuContent(
                 popover: filtered.content, selection: $menuSelection,
-                visibleRows: Theme.Size.appMenuVisibleRows,
                 search: PopoverMenu.Search(
                     placeholder: String(localized: "Search for actions…"), placement: .bottom),
                 onActivate: activateMenuItem, preferredSelection: filtered.bestMatch)
@@ -767,7 +776,7 @@ struct RootPaletteView: View {
                 if isCollapsed {
                     CompactBar(
                         commands: compactCommands, selection: compactSelection.command,
-                        onRun: runCompactCommand)
+                        onRun: runCompactCommand, onSettled: { hostWindow?.invalidateShadow() })
                 }
             }
             // Next turn, once the show's `land()` and search refocus are done, so neither undoes it.
